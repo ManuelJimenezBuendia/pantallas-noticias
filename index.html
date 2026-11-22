@@ -13,20 +13,22 @@
   Muestra las últimas noticias de las secciones elegidas, una cada vez, con foto,
   resumen y un QR a la noticia completa.
 
+  Sin parámetros: todas las secciones, 12 s por noticia y 305 s en total (25 noticias; en
+  Anthias, 305 s).
+
   Parámetros opcionales de la URL:
-    categorias=Ciencia,Tecnología   secciones (por defecto: Ciencia, Tecnología, Innova y Tierra;
-                                    «todas» para no filtrar). Las de SINC: Ciencia, Tecnología,
-                                    Innova, Tierra, Salud y Sociedad (sin importar tildes ni
-                                    mayúsculas)
-    segundos=8                      segundos por noticia
+    categorias=Ciencia,Tecnología   secciones (por defecto, todas). Las de SINC: Ciencia,
+                                    Tecnología, Innova, Tierra, Salud y Sociedad (sin importar
+                                    tildes ni mayúsculas)
+    segundos=12                     segundos por noticia
     duracion=305                    duración total, la misma que en Anthias: la página calcula
                                     cuántas noticias caben, dejando 5 s para la carga
                                     (305 s y 12 s por noticia → 25 noticias). Manda sobre n.
                                     Si no hay noticias para llenarla, vuelve a empezar.
-    n=3                             noticias que se muestran, si no se indica la duración
-                                    (1 a 60; con más de 8, la barra de progreso es de la
-                                    noticia actual, con un contador «3 / 25»)
-    Ejemplo de 5 minutos: ?categorias=todas&segundos=12&duracion=305
+    n=3                             en vez de la duración, el número de noticias; al acabar se
+                                    queda en la última (1 a 60; con más de 8, la barra de
+                                    progreso es de la noticia actual, con un contador «3 / 25»)
+    Ejemplo corto: ?categorias=ciencia,tecnologia,innova,tierra&n=3&segundos=8 (26 s)
     bucle=1                         vuelve a empezar al acabar (si no, se queda en la última,
                                     porque Anthias recarga la página cada vez que la muestra)
     pausa=1                        no pasa de noticia (para capturas); inicio=k empieza en la k-ésima
@@ -119,16 +121,19 @@
 
 const URL_RSS = "https://www.agenciasinc.es/feed/Noticias";
 const CLAVE_CACHE = "noticias_sinc";
-const CATEGORIAS_DEFECTO = ["Ciencia", "Tecnología", "Innova", "Tierra"];
+// Valores por defecto: todas las secciones, 12 s por noticia y 305 s en total (25 noticias).
+const SEGUNDOS_DEFECTO = 12;
+const DURACION_DEFECTO = 305;
 
 const params = new URLSearchParams(location.search);
 const textoCategorias = (params.get("categorias") || "").trim();
-const CATEGORIAS = textoCategorias.toLowerCase() === "todas" ? []
-  : textoCategorias ? textoCategorias.split(",").map(s => s.trim()).filter(Boolean)
-  : CATEGORIAS_DEFECTO;
-const SEGUNDOS = Math.max(4, parseInt(params.get("segundos") || "8", 10) || 8);
+const CATEGORIAS = !textoCategorias || textoCategorias.toLowerCase() === "todas" ? []
+  : textoCategorias.split(",").map(s => s.trim()).filter(Boolean);
+const SEGUNDOS = Math.max(4, parseInt(params.get("segundos") || "", 10) || SEGUNDOS_DEFECTO);
 const MARGEN_CARGA = 5;    // segundos que se dejan para cargar la página
-const DURACION = parseInt(params.get("duracion") || "0", 10) || 0;
+// Si se indica n (y no la duración), se muestran n noticias y se acaba en la última.
+const DURACION = params.has("duracion") ? parseInt(params.get("duracion"), 10) || 0
+  : params.has("n") ? 0 : DURACION_DEFECTO;
 const N = Math.max(1, Math.min(60, DURACION > 0
   ? Math.floor((DURACION - MARGEN_CARGA) / SEGUNDOS)
   : parseInt(params.get("n") || "3", 10) || 3));
