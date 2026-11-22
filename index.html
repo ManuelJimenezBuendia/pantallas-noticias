@@ -15,11 +15,17 @@
 
   Parámetros opcionales de la URL:
     categorias=Ciencia,Tecnología   secciones (por defecto: Ciencia, Tecnología, Innova y Tierra;
-                                    «todas» para no filtrar)
-    n=3                             noticias que se muestran (1 a 40; con más de 8, la barra de
-                                    progreso es de la noticia actual, con un contador «3 / 25»)
+                                    «todas» para no filtrar). Las de SINC: Ciencia, Tecnología,
+                                    Innova, Tierra, Salud y Sociedad (sin importar tildes ni
+                                    mayúsculas)
     segundos=8                      segundos por noticia
-    Ejemplo de 5 minutos: ?categorias=todas&n=25&segundos=12 (en Anthias, 305 s)
+    duracion=305                    duración total, la misma que en Anthias: la página calcula
+                                    cuántas noticias caben, dejando 5 s para la carga
+                                    (305 s y 12 s por noticia → 25 noticias). Manda sobre n.
+    n=3                             noticias que se muestran, si no se indica la duración
+                                    (1 a 60; con más de 8, la barra de progreso es de la
+                                    noticia actual, con un contador «3 / 25»)
+    Ejemplo de 5 minutos: ?categorias=todas&segundos=12&duracion=305
     bucle=1                         vuelve a empezar al acabar (si no, se queda en la última,
                                     porque Anthias recarga la página cada vez que la muestra)
     pausa=1                        no pasa de noticia (para capturas); inicio=k empieza en la k-ésima
@@ -119,9 +125,13 @@ const textoCategorias = (params.get("categorias") || "").trim();
 const CATEGORIAS = textoCategorias.toLowerCase() === "todas" ? []
   : textoCategorias ? textoCategorias.split(",").map(s => s.trim()).filter(Boolean)
   : CATEGORIAS_DEFECTO;
-const N = Math.max(1, Math.min(40, parseInt(params.get("n") || "3", 10) || 3));
-const MAX_SEGMENTOS = 8;   // con más noticias, una sola barra y un contador
 const SEGUNDOS = Math.max(4, parseInt(params.get("segundos") || "8", 10) || 8);
+const MARGEN_CARGA = 5;    // segundos que se dejan para cargar la página
+const DURACION = parseInt(params.get("duracion") || "0", 10) || 0;
+const N = Math.max(1, Math.min(60, DURACION > 0
+  ? Math.floor((DURACION - MARGEN_CARGA) / SEGUNDOS)
+  : parseInt(params.get("n") || "3", 10) || 3));
+const MAX_SEGMENTOS = 8;   // con más noticias, una sola barra y un contador
 const PAUSA = params.get("pausa") === "1";
 const BUCLE = params.get("bucle") === "1";
 const INICIO = parseInt(params.get("inicio") || "0", 10) || 0;

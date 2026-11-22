@@ -29,15 +29,26 @@ muestra, así que al acabar la tercera noticia se queda en ella.
 ## Parámetros (opcionales, en la dirección)
 | Parámetro | Por defecto | Uso |
 |---|---|---|
-| `categorias` | `Ciencia,Tecnología,Innova,Tierra` | Secciones de SINC; `todas` para no filtrar |
-| `n` | `3` | Noticias que se muestran (1 a 40). Con más de 8, una sola barra de progreso y un contador («4 / 25») |
-| `segundos` | `8` | Segundos por noticia |
+| `categorias` | `Ciencia,Tecnología,Innova,Tierra` | Secciones separadas por comas: `Ciencia`, `Tecnología`, `Innova`, `Tierra`, `Salud`, `Sociedad` (da igual con o sin tildes y mayúsculas); `todas` para no filtrar |
+| `segundos` | `8` | Segundos por noticia (mínimo 4) |
+| `duracion` | — | Duración total en segundos, **la misma que se pone en Anthias**: la página calcula cuántas noticias caben, dejando 5 s para la carga. Manda sobre `n` |
+| `n` | `3` | Noticias que se muestran si no se indica `duracion` (1 a 60) |
 | `bucle` | — | `1`: vuelve a empezar al acabar (para verla en un navegador) |
 | `pausa`, `inicio` | — | `pausa=1` no pasa de noticia; `inicio=k` empieza en la k-ésima (para capturas) |
 
-Ejemplos (la duración en Anthias es n × segundos, más unos segundos para la carga):
-- `…/?categorias=Tecnología,Innova&n=4&segundos=7`: 30 s.
-- **5 minutos**, todas las secciones: `…/?categorias=todas&n=25&segundos=12`: **305 s**.
+Con más de 8 noticias, la barra de progreso es solo la de la noticia actual, con un contador
+(«4 / 25»). Si en las secciones elegidas hay menos noticias de las que caben, se muestran las que
+haya y la página se queda en la última. El RSS trae las 150 últimas noticias (unas seis
+semanas); Tierra y Salud son las secciones con más, y Tecnología e Innova publican muy pocas:
+filtrando solo esas, salen pocas noticias y algunas de hace semanas.
+
+Ejemplos:
+| Dirección | Noticias | Duración en Anthias |
+|---|---|---|
+| `…/` | 3 de Ciencia, Tecnología, Innova y Tierra, 8 s | 26 s |
+| `…/?categorias=todas&segundos=12&duracion=305` | 25 de todas las secciones, 12 s | **305 s** (5 min) |
+| `…/?categorias=ciencia,tierra&segundos=10&duracion=125` | 12 de Ciencia y Tierra, 10 s | 125 s |
+| `…/?categorias=Ciencia,Tierra&n=4&segundos=7` | 4 de Ciencia y Tierra, 7 s | 30 s |
 
 Las fotos se cargan de una en una (la actual y la siguiente), así que una serie larga no
 satura la Raspberry.
