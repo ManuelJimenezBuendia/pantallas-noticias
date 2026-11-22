@@ -1,7 +1,16 @@
 {
  "fuente": "https://www.upct.es/destacados/noticias.php?ubicacion=general&op=2",
- "actualizado": "2026-11-22T18:39:26+00:00",
+ "actualizado": "2026-11-22T23:38:52+00:00",
  "noticias": [
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-19-1800-euros-en-premios-a-los-mejores-trabajos-fin-de-estudios-sobre-energias-renovables",
+   "titulo": "1.800 euros en premios a los mejores Trabajos Fin de Estudios sobre energías renovables",
+   "fecha": "2026-11-23",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18593img_17967premiados.jpeg",
+   "pieFoto": "Los premiados de la pasada edición, durante la jornada Hidrógeno verde y gases renovables, celebrada el Día Mundial de la Energía.",
+   "resumen": "Campus Mare Nostrum y AHMUR convocan la segunda edición de estos galardones para estudiantes de la UPCT y la UMU",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18593img_17967premiados.jpeg"
+  },
   {
    "enlace": "https://www.upct.es/noticias/2026-11-21-semana-europea-de-reduccion-de-residuos-la-upct-innova-con-un-deshidratador-de-excedentes-horticolas",
    "titulo": "Semana Europea de Reducción de Residuos: la UPCT innova con un deshidratador de excedentes hortícolas",
@@ -109,15 +118,6 @@
    "pieFoto": "Fotografía del pódcast sobre autismo realizado el año pasado en la UPCT.",
    "resumen": "El Servicio de Atención a Estudiantes con Discapacidad y/o Necesidades Especiales de Apoyo Educativo ha lanzado la primera edición de la microcredencial universitaria 'Apoyo al alumnado con Trastorno del Espectro del Autismo (TEA) en la Educación Superior'.",
    "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18590DSC03329.JPG"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-18-nuevos-puntos-para-recoger-y-aparcar-bicicletas-de-alquiler-en-el-campus-muralla-del-mar-",
-   "titulo": "Nuevos puntos para recoger y aparcar bicicletas de alquiler en el Campus Muralla del Mar",
-   "fecha": "2026-11-18",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18589composicion%20aparcamientos%20de%20bicis%20Hoppy.jpeg",
-   "pieFoto": "Bicicletas de alquiler junto a los tres campus de la UPCT.",
-   "resumen": "El servicio ofrece descuento a los estudiantes y posibilita desplazamientos a los campus de Alfonso XIII y el CIM y a otros muchos puntos de la ciudad",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18589composicion%20aparcamientos%20de%20bicis%20Hoppy.jpeg"
   }
  ]
 }
