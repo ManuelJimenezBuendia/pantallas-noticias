@@ -7,16 +7,22 @@
 <title>Noticias de ciencia</title>
 <script src="recursos/qrcode.min.js"></script>
 <!--
-  Pantalla de noticias de ciencia para Anthias (contenido de tipo web, 1920x1080).
-  Lee el RSS de la Agencia SINC desde el navegador: SINC lo permite
-  (Access-Control-Allow-Origin: *) y sus textos tienen licencia CC BY 4.0.
-  Muestra las últimas noticias de las secciones elegidas, una cada vez, con foto,
-  resumen y un QR a la noticia completa.
+  Pantalla de noticias para Anthias (contenido de tipo web, 1920x1080). Dos fuentes:
+  - SINC (por defecto): lee el RSS de la Agencia SINC desde el navegador; SINC lo permite
+    (Access-Control-Allow-Origin: *) y sus textos tienen licencia CC BY 4.0.
+  - UPCT (fuente=upct): lee datos/upct.json, que actualiza cada hora una tarea programada de
+    GitHub (.github/workflows/upct.yml con scripts/upct.py): la web de la UPCT no tiene RSS ni
+    deja leerla desde otra web.
+  Muestra las últimas noticias, una cada vez, con foto, resumen y un QR a la noticia completa.
 
-  Sin parámetros: todas las secciones, 12 s por noticia y 305 s en total (25 noticias; en
-  Anthias, 305 s).
+  Sin parámetros: SINC, todas las secciones, 12 s por noticia y 305 s en total (25 noticias;
+  en Anthias, 305 s). Con fuente=upct: 10 noticias de 12 s, 125 s en Anthias, foto a pantalla
+  completa.
 
   Parámetros opcionales de la URL:
+    fuente=upct                     noticias de la UPCT (sin secciones: no admite categorias)
+    diseno=foto | mitad             foto a pantalla completa con el texto encima (por defecto
+                                    en la UPCT) o foto a media pantalla (por defecto en SINC)
     categorias=Ciencia,Tecnología   secciones (por defecto, todas). Las de SINC: Ciencia,
                                     Tecnología, Innova, Tierra, Salud y Sociedad (sin importar
                                     tildes ni mayúsculas)
@@ -111,6 +117,38 @@
   .texto, .foto img { transition: opacity .6s ease; }
   .oculto .texto, .oculto .foto img { opacity: 0; }
 
+  /* Diseño «foto»: foto a pantalla completa y el texto encima, abajo (fotos apaisadas) */
+  .foto-completa .noticia, .foto-completa .noticia.sin-foto { display: block; }
+  .foto-completa .foto { position: absolute; inset: 0; }
+  .foto-completa .foto figcaption { display: none; }
+  .foto-completa .texto {
+    position: absolute; inset: 0; height: auto; padding: 4.5vh 6vh 7.5vh;
+    background: linear-gradient(to bottom, rgba(8, 15, 26, .8) 0, rgba(8, 15, 26, .5) 11%,
+                rgba(8, 15, 26, 0) 24%, rgba(8, 15, 26, 0) 40%, rgba(8, 15, 26, .9) 66%,
+                rgba(8, 15, 26, .96) 100%);
+    display: grid; grid-template-columns: 1fr auto; column-gap: 6vh;
+    grid-template-rows: auto 1fr auto auto auto;
+  }
+  .foto-completa .sin-foto .texto { background: var(--panel); }
+  .foto-completa .marca { grid-column: 1 / -1; grid-row: 1; }
+  .foto-completa .marca img { filter: drop-shadow(0 0 .8vh rgba(0, 0, 0, .55)); }
+  .foto-completa .meta { grid-column: 1; grid-row: 3; }
+  .foto-completa h1 {
+    grid-column: 1; grid-row: 4; margin-top: 2vh; font-size: 5.6vh; -webkit-line-clamp: 3;
+    text-shadow: 0 .2vh 1vh rgba(0, 0, 0, .5);
+  }
+  .foto-completa .resumen {
+    grid-column: 1; grid-row: 5; margin-top: 2.2vh; font-size: 2.9vh; color: #dbe4f0;
+    -webkit-line-clamp: 2;
+  }
+  .foto-completa .pie {
+    /* Abarca también la fila elástica: si no, su altura estira la del resumen. */
+    grid-column: 2; grid-row: 2 / 6; align-self: end; margin: 0; padding: 0;
+    flex-direction: column; gap: 1.8vh; text-align: center;
+  }
+  .foto-completa .fuente { color: #dbe4f0; }
+  .foto-completa .progreso { left: 0 !important; padding-bottom: 3vh; }
+
   .vacio { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
   .vacio p { font-size: 5vh; font-weight: 800; }
   .vacio img { display: block; width: min(76vw, 135vh); aspect-ratio: 927 / 109; margin: 0 auto; }
@@ -124,12 +162,21 @@
 "use strict";
 
 const URL_RSS = "https://www.agenciasinc.es/feed/Noticias";
-const CLAVE_CACHE = "noticias_sinc";
-// Valores por defecto: todas las secciones, 12 s por noticia y 305 s en total (25 noticias).
-const SEGUNDOS_DEFECTO = 12;
-const DURACION_DEFECTO = 305;
+const URL_UPCT = "datos/upct.json";
 
 const params = new URLSearchParams(location.search);
+// Fuente: SINC (por defecto) o la UPCT.
+const UPCT = (params.get("fuente") || "").trim().toLowerCase() === "upct";
+const CLAVE_CACHE = UPCT ? "noticias_upct" : "noticias_sinc";
+// Valores por defecto: 12 s por noticia; SINC, 305 s (25 noticias); UPCT, 125 s (10 noticias).
+const SEGUNDOS_DEFECTO = 12;
+const DURACION_DEFECTO = UPCT ? 125 : 305;
+// Diseño: foto a pantalla completa (por defecto en la UPCT, con fotos apaisadas de actos) o a
+// media pantalla (por defecto en SINC).
+const DISENO = (params.get("diseno") || "").trim().toLowerCase();
+const FOTO_COMPLETA = DISENO === "foto" || (UPCT && DISENO !== "mitad");
+if (FOTO_COMPLETA) document.documentElement.classList.add("foto-completa");
+if (UPCT) document.title = "Noticias de la UPCT";
 const textoCategorias = (params.get("categorias") || "").trim();
 const CATEGORIAS = !textoCategorias || textoCategorias.toLowerCase() === "todas" ? []
   : textoCategorias.split(",").map(s => s.trim()).filter(Boolean);
@@ -210,8 +257,40 @@ async function leerRss() {
   }
 }
 
+// Noticias de la UPCT: las deja en datos/upct.json la tarea programada (scripts/upct.py).
+// No tienen sección: sin etiqueta.
+async function leerUpct() {
+  const control = new AbortController();
+  const plazo = setTimeout(() => control.abort(), 10000);
+  try {
+    const r = await fetch(URL_UPCT, { signal: control.signal, cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const noticias = ((await r.json()).noticias || []).map(n => ({
+      titulo: textoPlano(n.titulo),
+      resumen: textoPlano(n.resumen),
+      enlace: aHttps(n.enlace),
+      fecha: n.fecha,
+      autor: "",
+      categoria: "",
+      foto: aHttps(n.fotoMediana || n.foto),
+      pieFoto: textoPlano(n.pieFoto),
+    })).filter(n => n.titulo);
+    if (!noticias.length) throw new Error("sin noticias");
+    try { localStorage.setItem(CLAVE_CACHE, JSON.stringify(noticias)); } catch (e) {}
+    return noticias;
+  } catch (e) {
+    try {
+      const copia = JSON.parse(localStorage.getItem(CLAVE_CACHE) || "null");
+      if (Array.isArray(copia)) return copia;
+    } catch (e2) {}
+    return [];
+  } finally {
+    clearTimeout(plazo);
+  }
+}
+
 function elegir(noticias) {
-  const buscadas = CATEGORIAS.map(normalizar);
+  const buscadas = UPCT ? [] : CATEGORIAS.map(normalizar);
   return noticias
     .map(n => ({ ...n, fecha: new Date(n.fecha) }))
     .filter(n => !buscadas.length || buscadas.includes(normalizar(n.categoria)))
@@ -247,7 +326,9 @@ function ponerQr(contenedor, texto) {
 }
 
 // Que todo quepa en la pantalla: primero se reduce la letra del titular (hasta que entre
-// en 4 líneas) y después se quitan líneas al resumen.
+// en 4 líneas; 3 con la foto completa) y después se quitan líneas al resumen.
+const AJUSTE = FOTO_COMPLETA ? { tam: 5.6, min: 4.4, lineas: 3, resumen: 2 }
+                             : { tam: 6.2, min: 4.7, lineas: 4, resumen: 5 };
 function ajustar(texto, titular, resumen) {
   titular.style.fontSize = "";
   resumen.style.webkitLineClamp = "";
@@ -256,13 +337,13 @@ function ajustar(texto, titular, resumen) {
   titular.style.webkitLineClamp = "none";
   const lineas = () => titular.getBoundingClientRect().height /
                        (parseFloat(getComputedStyle(titular).fontSize) * 1.12);
-  for (let tam = 6.2; lineas() > 4.2 && tam > 4.7; ) {
+  for (let tam = AJUSTE.tam; lineas() > AJUSTE.lineas + 0.2 && tam > AJUSTE.min; ) {
     tam -= 0.3;
     titular.style.fontSize = tam.toFixed(1) + "vh";
   }
   titular.style.display = "";
   titular.style.webkitLineClamp = "";
-  for (let n = 5; texto.scrollHeight > texto.clientHeight + 2 && n > 1; ) {
+  for (let n = AJUSTE.resumen; texto.scrollHeight > texto.clientHeight + 2 && n > 1; ) {
     n -= 1;
     resumen.style.webkitLineClamp = String(n);
   }
@@ -315,9 +396,13 @@ async function mostrarNoticias(noticias) {
     if (!isNaN(n.fecha)) meta.append(crear("span", "fecha", fechaLarga.format(n.fecha)));
     const pie = crear("div", "pie");
     const fuente = crear("div", "fuente");
-    fuente.append(crear("b", null, "Lee la noticia completa"),
-                  document.createTextNode("Agencia SINC" + (n.autor && n.autor !== "SINC" ? " · " + n.autor : "")),
-                  crear("br"), document.createTextNode("Licencia CC BY 4.0"));
+    fuente.append(crear("b", null, "Lee la noticia completa"));
+    if (UPCT) {
+      fuente.append(document.createTextNode("Noticias de la UPCT"));
+    } else {
+      fuente.append(document.createTextNode("Agencia SINC" + (n.autor && n.autor !== "SINC" ? " · " + n.autor : "")),
+                    crear("br"), document.createTextNode("Licencia CC BY 4.0"));
+    }
     pie.append(fuente);
     ponerQr(pie, n.enlace);
     const titular = crear("h1", null, n.titulo);
@@ -366,13 +451,13 @@ function sinNoticias() {
   const v = crear("div", "vacio");
   const p = crear("p");
   const logo = crearLogo(() => logo.replaceWith(NOMBRE_CENTRO));
-  p.append(logo, crear("small", null, "Noticias de ciencia y tecnología"));
+  p.append(logo, crear("small", null, UPCT ? "Noticias de la UPCT" : "Noticias de ciencia y tecnología"));
   v.append(p);
   raiz.append(v);
 }
 
 (async () => {
-  const noticias = elegir(await leerRss());
+  const noticias = elegir(await (UPCT ? leerUpct() : leerRss()));
   // Medir con la letra definitiva (Inter), no con la de reserva.
   try {
     await Promise.race([
