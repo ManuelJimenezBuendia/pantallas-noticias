@@ -9,18 +9,23 @@ resolución 16:9). La usa la ETSII de la Universidad Politécnica de Cartagena.
 - Por defecto, las **25 últimas noticias** de todas las secciones, **12 s cada una** (5 minutos),
   con un fundido, una barra de progreso y un contador («4 / 25»). Se puede cambiar con los
   parámetros de la dirección (ver más abajo).
-- En cada noticia: la foto con su pie, la sección, la fecha, el titular, el resumen y un **QR**
-  a la noticia completa, con la fuente, el autor y la licencia.
+- En cada noticia: el **logo de la UPCT · ETSII** (arriba a la derecha), la foto con su pie, la
+  sección, la fecha, el titular, el resumen y un **QR** a la noticia completa, con la fuente, el
+  autor y la licencia.
 - Si el titular es largo, reduce la letra; si no cabe todo, acorta el resumen.
-- Sin conexión, la última copia guardada en el navegador; si no hay ninguna, una pantalla neutra.
+- Sin conexión, la última copia guardada en el navegador; si no hay ninguna, una pantalla neutra
+  con el logo.
 
 ## Cómo funciona
 - Lee el RSS `https://www.agenciasinc.es/feed/Noticias` desde el navegador: SINC permite leerlo
   desde otra web (`Access-Control-Allow-Origin: *`). No necesita servidor propio.
 - Las fotos se piden en la versión reducida que usa la web de SINC (unos 1300 px), no la
   original (puede pesar varios MB).
-- La letra (Inter) y el generador de QR van en `recursos/`: la pantalla solo necesita llegar a
-  esta página y a `agenciasinc.es`.
+- La letra (Inter), el generador de QR y el logo van en `recursos/`: la pantalla solo necesita
+  llegar a esta página y a `agenciasinc.es`.
+- Para probarla en un ordenador, abrir `index.html` como fichero (`file:///…`), no con un
+  servidor local: SINC responde a `localhost` y `127.0.0.1` con una cabecera CORS doble que el
+  navegador rechaza (y sale la pantalla neutra). Desde GitHub Pages no pasa.
 
 ## En Anthias
 Contenido de tipo **web** con la dirección de esta página y una duración de **305 s** (25
@@ -62,5 +67,7 @@ satura la Raspberry.
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.es); en cada noticia se citan
   SINC y su autor. Las fotos llevan el crédito que indica SINC. Nada de esto se guarda en este
   repositorio: se lee en el momento.
+- **Logo** (`recursos/logo-upct-etsii.svg`): de la Universidad Politécnica de Cartagena y su
+  Escuela Técnica Superior de Ingeniería Industrial; no está bajo ninguna licencia libre.
 - **Letra Inter**: SIL Open Font License 1.1 (`recursos/OFL-Inter.txt`).
 - **qrcodejs** (davidshimjs): licencia MIT (`recursos/LICENSE-qrcodejs.txt`).

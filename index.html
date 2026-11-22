@@ -68,9 +68,12 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
   .texto {
-    display: flex; flex-direction: column; padding: 6.5vh 6vh 9vh; background: var(--panel);
+    display: flex; flex-direction: column; padding: 4.5vh 6vh 9vh; background: var(--panel);
     height: 100vh; overflow: hidden;
   }
+  /* Logo de la UPCT · ETSII (en blanco), arriba a la derecha del texto */
+  .marca { flex: none; display: flex; justify-content: flex-end; margin-bottom: 3.2vh; }
+  .marca img { display: block; height: 6vh; aspect-ratio: 927 / 109; }
   .meta { display: flex; align-items: center; gap: 2.2vh; font-size: 2.6vh; color: var(--suave); }
   .cat {
     background: var(--acento); color: #1b1206; font-weight: 800;
@@ -110,7 +113,8 @@
 
   .vacio { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
   .vacio p { font-size: 5vh; font-weight: 800; }
-  .vacio small { display: block; margin-top: 2vh; font-size: 2.6vh; color: var(--suave); font-weight: 400; }
+  .vacio img { display: block; width: min(76vw, 135vh); aspect-ratio: 927 / 109; margin: 0 auto; }
+  .vacio small { display: block; margin-top: 4vh; font-size: 3.2vh; color: var(--suave); font-weight: 400; }
 </style>
 </head>
 <body>
@@ -143,6 +147,8 @@ const BUCLE = params.get("bucle") === "1";
 const INICIO = parseInt(params.get("inicio") || "0", 10) || 0;
 
 const raiz = document.getElementById("raiz");
+const LOGO = "recursos/logo-upct-etsii.svg";
+const NOMBRE_CENTRO = "ETSII · Universidad Politécnica de Cartagena";
 const fechaLarga = new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "long" });
 
 // Texto plano a partir de un fragmento con HTML o entidades. Lo que viene del RSS
@@ -158,6 +164,15 @@ function crear(etiqueta, clase, texto) {
   if (clase) e.className = clase;
   if (texto != null) e.textContent = texto;
   return e;
+}
+
+// Logo del centro; si no se puede cargar, en su lugar se pone el nombre (o nada).
+function crearLogo(alFallar) {
+  const img = crear("img");
+  img.alt = NOMBRE_CENTRO;
+  img.onerror = alFallar;
+  img.src = LOGO;
+  return img;
 }
 
 async function leerRss() {
@@ -262,6 +277,9 @@ async function mostrarNoticias(noticias) {
   figura.append(img, pieFoto);
   const texto = crear("section", "texto");
   marco.append(figura, texto);
+  // El logo es el mismo elemento en todas las noticias (no se vuelve a cargar).
+  const marca = crear("div", "marca");
+  marca.append(crearLogo(() => { marca.style.display = "none"; }));
   // Barra de progreso: un segmento por noticia o, si son muchas, una barra y un contador.
   const progreso = crear("div", "progreso");
   progreso.style.setProperty("--duracion", SEGUNDOS + "s");
@@ -304,7 +322,7 @@ async function mostrarNoticias(noticias) {
     ponerQr(pie, n.enlace);
     const titular = crear("h1", null, n.titulo);
     const resumen = crear("p", "resumen", n.resumen);
-    texto.replaceChildren(meta, titular, resumen, pie);
+    texto.replaceChildren(marca, meta, titular, resumen, pie);
     ajustar(texto, titular, resumen);
 
     const actual = PAUSA ? "pausa" : "activa";
@@ -346,8 +364,9 @@ async function mostrarNoticias(noticias) {
 
 function sinNoticias() {
   const v = crear("div", "vacio");
-  const p = crear("p", null, "ETSII · Universidad Politécnica de Cartagena");
-  p.append(crear("small", null, "Noticias de ciencia y tecnología"));
+  const p = crear("p");
+  const logo = crearLogo(() => logo.replaceWith(NOMBRE_CENTRO));
+  p.append(logo, crear("small", null, "Noticias de ciencia y tecnología"));
   v.append(p);
   raiz.append(v);
 }
