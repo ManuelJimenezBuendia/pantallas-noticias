@@ -28,10 +28,23 @@ resolución 16:9). La usa la ETSII de la Universidad Politécnica de Cartagena.
   navegador rechaza (y sale la pantalla neutra). Desde GitHub Pages no pasa.
 
 ## En Anthias
-Contenido de tipo **web** con la dirección de esta página y una duración de **305 s** (25
-noticias × 12 s y 5 s para la carga). Si se cambian los parámetros, la duración en Anthias es la
-que se ponga en `duracion` (o n × segundos más unos segundos, si se usa `n`). Anthias vuelve a
-cargar la página cada vez que la muestra.
+Contenido de tipo **web**, con esta dirección y una duración de **305 s** (25 noticias × 12 s y
+5 s para la carga):
+
+```
+https://manueljimenezbuendia.github.io/pantallas-noticias/
+```
+
+Los parámetros (ver más abajo) se añaden al final de la dirección, después de `?` y separados
+por `&`. Entonces la duración en Anthias es la que se ponga en `duracion` (o n × segundos más
+unos segundos, si se usa `n`). Por ejemplo, la versión corta para probarla (3 noticias de 8 s;
+**26 s** en Anthias):
+
+```
+https://manueljimenezbuendia.github.io/pantallas-noticias/?categorias=ciencia,tecnologia,innova,tierra&n=3&segundos=8
+```
+
+Anthias vuelve a cargar la página cada vez que la muestra.
 
 ## Parámetros (opcionales, en la dirección)
 | Parámetro | Por defecto | Uso |
