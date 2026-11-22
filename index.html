@@ -16,8 +16,10 @@
   Parámetros opcionales de la URL:
     categorias=Ciencia,Tecnología   secciones (por defecto: Ciencia, Tecnología, Innova y Tierra;
                                     «todas» para no filtrar)
-    n=3                             noticias que se muestran
+    n=3                             noticias que se muestran (1 a 40; con más de 8, la barra de
+                                    progreso es de la noticia actual, con un contador «3 / 25»)
     segundos=8                      segundos por noticia
+    Ejemplo de 5 minutos: ?categorias=todas&n=25&segundos=12 (en Anthias, 305 s)
     bucle=1                         vuelve a empezar al acabar (si no, se queda en la última,
                                     porque Anthias recarga la página cada vez que la muestra)
     pausa=1                        no pasa de noticia (para capturas); inicio=k empieza en la k-ésima
@@ -80,7 +82,14 @@
   .qr img, .qr canvas { width: 18vh !important; height: 18vh !important; }
   .fuente { font-size: 2.3vh; line-height: 1.45; color: var(--suave); }
   .fuente b { display: block; color: var(--texto); font-size: 2.9vh; margin-bottom: .6vh; }
-  .progreso { position: absolute; left: 50%; right: 0; bottom: 0; display: flex; gap: .6vh; padding: 0 6vh 3.5vh; }
+  .progreso {
+    position: absolute; left: 50%; right: 0; bottom: 0; display: flex; align-items: center;
+    gap: .6vh; padding: 0 6vh 3.5vh;
+  }
+  .contador {
+    flex: none; margin-left: 1.4vh; font-size: 2.2vh; line-height: 1; color: var(--suave);
+    font-variant-numeric: tabular-nums;
+  }
   .progreso i { flex: 1; height: .8vh; background: var(--linea); border-radius: .4vh; overflow: hidden; }
   .progreso b { display: block; height: 100%; width: 0; background: var(--acento); }
   .progreso .hecha b { width: 100%; }
@@ -110,7 +119,8 @@ const textoCategorias = (params.get("categorias") || "").trim();
 const CATEGORIAS = textoCategorias.toLowerCase() === "todas" ? []
   : textoCategorias ? textoCategorias.split(",").map(s => s.trim()).filter(Boolean)
   : CATEGORIAS_DEFECTO;
-const N = Math.max(1, Math.min(8, parseInt(params.get("n") || "3", 10) || 3));
+const N = Math.max(1, Math.min(40, parseInt(params.get("n") || "3", 10) || 3));
+const MAX_SEGMENTOS = 8;   // con más noticias, una sola barra y un contador
 const SEGUNDOS = Math.max(4, parseInt(params.get("segundos") || "8", 10) || 8);
 const PAUSA = params.get("pausa") === "1";
 const BUCLE = params.get("bucle") === "1";
@@ -125,7 +135,7 @@ function textoPlano(s) {
   return new DOMParser().parseFromString(s || "", "text/html").body.textContent.replace(/\s+/g, " ").trim();
 }
 const aHttps = u => (u || "").replace(/^http:\/\//i, "https://");
-const normalizar = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const normalizar = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 function crear(etiqueta, clase, texto) {
   const e = document.createElement(etiqueta);
@@ -236,20 +246,33 @@ async function mostrarNoticias(noticias) {
   figura.append(img, pieFoto);
   const texto = crear("section", "texto");
   marco.append(figura, texto);
+  // Barra de progreso: un segmento por noticia o, si son muchas, una barra y un contador.
   const progreso = crear("div", "progreso");
   progreso.style.setProperty("--duracion", SEGUNDOS + "s");
-  noticias.forEach(() => progreso.append(crear("i")));
-  [...progreso.children].forEach(barra => barra.append(crear("b")));
+  const segmentos = noticias.length <= MAX_SEGMENTOS;
+  const barras = (segmentos ? noticias : [null]).map(() => {
+    const barra = crear("i");
+    barra.append(crear("b"));
+    progreso.append(barra);
+    return barra;
+  });
+  const contador = segmentos ? null : crear("span", "contador");
+  if (contador) progreso.append(contador);
   raiz.append(marco, progreso);
 
-  const fotos = await Promise.all(noticias.map(n => cargarFoto(n.foto)));
+  // Las fotos se cargan de una en una: la de la noticia actual y, mientras se ve, la siguiente.
+  const fotos = [];
+  const foto = k => fotos[k] || (fotos[k] = cargarFoto(noticias[k].foto));
+  const siguiente = k => (k + 1) % noticias.length;
   let i = ((INICIO % noticias.length) + noticias.length) % noticias.length;
 
-  function mostrar() {
+  async function mostrar() {
     const n = noticias[i];
-    marco.classList.toggle("sin-foto", !fotos[i]);
-    progreso.style.left = fotos[i] ? "50%" : "0";
-    if (fotos[i]) img.src = fotos[i]; else img.removeAttribute("src");
+    const url = await foto(i);
+    if (noticias.length > 1) foto(siguiente(i));
+    marco.classList.toggle("sin-foto", !url);
+    progreso.style.left = url ? "50%" : "0";
+    if (url) img.src = url; else img.removeAttribute("src");
     pieFoto.textContent = n.pieFoto;
     pieFoto.hidden = !n.pieFoto;
 
@@ -268,9 +291,16 @@ async function mostrarNoticias(noticias) {
     texto.replaceChildren(meta, titular, resumen, pie);
     ajustar(texto, titular, resumen);
 
-    [...progreso.children].forEach((barra, k) => {
-      barra.className = k < i ? "hecha" : k > i ? "" : PAUSA ? "pausa" : "activa";
-    });
+    const actual = PAUSA ? "pausa" : "activa";
+    if (segmentos) {
+      barras.forEach((barra, k) => { barra.className = k < i ? "hecha" : k > i ? "" : actual; });
+    } else {
+      // Reiniciar la animación de la única barra.
+      barras[0].className = "";
+      void barras[0].offsetWidth;
+      barras[0].className = actual;
+      contador.textContent = (i + 1) + " / " + noticias.length;
+    }
     marco.classList.remove("oculto");
   }
 
@@ -280,14 +310,20 @@ async function mostrarNoticias(noticias) {
     if (titular && resumen) ajustar(texto, titular, resumen);
   });
 
-  mostrar();
+  await mostrar();
   if (PAUSA || noticias.length < 2) return;
-  const temporizador = setInterval(() => {
-    // Anthias vuelve a cargar la página cada vez que le toca: al acabar, se queda en la última.
-    if (!BUCLE && i === noticias.length - 1) return clearInterval(temporizador);
-    marco.classList.add("oculto");
-    setTimeout(() => { i = (i + 1) % noticias.length; mostrar(); }, 600);
-  }, SEGUNDOS * 1000);
+  // Cada noticia dura SEGUNDOS, contando el fundido de 0,6 s. Anthias vuelve a cargar la
+  // página cada vez que le toca: al acabar, se queda en la última (salvo con bucle=1).
+  (function programar() {
+    setTimeout(async () => {
+      if (!BUCLE && i === noticias.length - 1) return;
+      marco.classList.add("oculto");
+      await Promise.all([foto(siguiente(i)), new Promise(ok => setTimeout(ok, 600))]);
+      i = siguiente(i);
+      await mostrar();
+      programar();
+    }, Math.max(0, SEGUNDOS * 1000 - 600));
+  })();
 }
 
 function sinNoticias() {

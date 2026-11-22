@@ -30,12 +30,17 @@ muestra, así que al acabar la tercera noticia se queda en ella.
 | Parámetro | Por defecto | Uso |
 |---|---|---|
 | `categorias` | `Ciencia,Tecnología,Innova,Tierra` | Secciones de SINC; `todas` para no filtrar |
-| `n` | `3` | Noticias que se muestran (1 a 8) |
+| `n` | `3` | Noticias que se muestran (1 a 40). Con más de 8, una sola barra de progreso y un contador («4 / 25») |
 | `segundos` | `8` | Segundos por noticia |
 | `bucle` | — | `1`: vuelve a empezar al acabar (para verla en un navegador) |
 | `pausa`, `inicio` | — | `pausa=1` no pasa de noticia; `inicio=k` empieza en la k-ésima (para capturas) |
 
-Ejemplo: `…/?categorias=Tecnología,Innova&n=4&segundos=7` (duración en Anthias: 30 s).
+Ejemplos (la duración en Anthias es n × segundos, más unos segundos para la carga):
+- `…/?categorias=Tecnología,Innova&n=4&segundos=7`: 30 s.
+- **5 minutos**, todas las secciones: `…/?categorias=todas&n=25&segundos=12`: **305 s**.
+
+Las fotos se cargan de una en una (la actual y la siguiente), así que una serie larga no
+satura la Raspberry.
 
 ## Licencias
 - **Noticias**: textos de la Agencia SINC (FECYT) con licencia
