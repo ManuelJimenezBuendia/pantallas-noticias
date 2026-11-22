@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Noticias de ciencia</title>
+<script src="recursos/qrcode.min.js"></script>
+<!--
+  Pantalla de noticias de ciencia para Anthias (contenido de tipo web, 1920x1080).
+  Lee el RSS de la Agencia SINC desde el navegador: SINC lo permite
+  (Access-Control-Allow-Origin: *) y sus textos tienen licencia CC BY 4.0.
+  Muestra las últimas noticias de las secciones elegidas, una cada vez, con foto,
+  resumen y un QR a la noticia completa.
+
+  Parámetros opcionales de la URL:
+    categorias=Ciencia,Tecnología   secciones (por defecto: Ciencia, Tecnología, Innova y Tierra;
+                                    «todas» para no filtrar)
+    n=3                             noticias que se muestran
+    segundos=8                      segundos por noticia
+    bucle=1                         vuelve a empezar al acabar (si no, se queda en la última,
+                                    porque Anthias recarga la página cada vez que la muestra)
+    pausa=1                        no pasa de noticia (para capturas); inicio=k empieza en la k-ésima
+-->
+<style>
+  @font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("recursos/inter-latin.woff2") format("woff2");
+  }
+  :root {
+    --fondo: #0e1a2b;
+    --panel: #132540;
+    --texto: #ffffff;
+    --suave: #b8c5d8;
+    --acento: #f28c28;
+    --linea: #2a3f5f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100vw; height: 100vh; overflow: hidden;
+    background: var(--fondo); color: var(--texto);
+    font-family: Inter, "DejaVu Sans", Arial, sans-serif;
+  }
+
+  .noticia { position: absolute; inset: 0; display: grid; grid-template-columns: 50% 50%; grid-template-rows: 100vh; }
+  .noticia.sin-foto { grid-template-columns: 100%; }
+  .foto { position: relative; overflow: hidden; background: #000; }
+  .sin-foto .foto { display: none; }
+  .foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .foto figcaption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 4vh 3vh 2vh; font-size: 1.9vh; color: #e8eef6;
+    background: linear-gradient(transparent, rgba(0, 0, 0, .75));
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .texto {
+    display: flex; flex-direction: column; padding: 6.5vh 6vh 9vh; background: var(--panel);
+    height: 100vh; overflow: hidden;
+  }
+  .meta { display: flex; align-items: center; gap: 2.2vh; font-size: 2.6vh; color: var(--suave); }
+  .cat {
+    background: var(--acento); color: #1b1206; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .08em;
+    padding: .7vh 1.6vh; border-radius: .6vh; font-size: 2.3vh;
+  }
+  h1 {
+    margin-top: 3.5vh; font-size: 6.2vh; line-height: 1.12; font-weight: 800; flex: none;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .meta, .resumen, .pie { flex: none; }
+  .resumen {
+    margin-top: 3vh; font-size: 3.1vh; line-height: 1.38; color: var(--suave);
+    display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .pie { margin-top: auto; display: flex; align-items: center; gap: 3vh; padding-top: 3vh; }
+  .qr { background: #fff; padding: 1.2vh; border-radius: .8vh; line-height: 0; flex: none; }
+  .qr img, .qr canvas { width: 18vh !important; height: 18vh !important; }
+  .fuente { font-size: 2.3vh; line-height: 1.45; color: var(--suave); }
+  .fuente b { display: block; color: var(--texto); font-size: 2.9vh; margin-bottom: .6vh; }
+  .progreso { position: absolute; left: 50%; right: 0; bottom: 0; display: flex; gap: .6vh; padding: 0 6vh 3.5vh; }
+  .progreso i { flex: 1; height: .8vh; background: var(--linea); border-radius: .4vh; overflow: hidden; }
+  .progreso b { display: block; height: 100%; width: 0; background: var(--acento); }
+  .progreso .hecha b { width: 100%; }
+  .progreso .pausa b { width: 45%; }
+  .progreso .activa b { animation: llenar var(--duracion, 8s) linear forwards; }
+  @keyframes llenar { from { width: 0; } to { width: 100%; } }
+  .texto, .foto img { transition: opacity .6s ease; }
+  .oculto .texto, .oculto .foto img { opacity: 0; }
+
+  .vacio { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+  .vacio p { font-size: 5vh; font-weight: 800; }
+  .vacio small { display: block; margin-top: 2vh; font-size: 2.6vh; color: var(--suave); font-weight: 400; }
+</style>
+</head>
+<body>
+<main id="raiz"></main>
+
+<script>
+"use strict";
+
+const URL_RSS = "https://www.agenciasinc.es/feed/Noticias";
+const CLAVE_CACHE = "noticias_sinc";
+const CATEGORIAS_DEFECTO = ["Ciencia", "Tecnología", "Innova", "Tierra"];
+
+const params = new URLSearchParams(location.search);
+const textoCategorias = (params.get("categorias") || "").trim();
+const CATEGORIAS = textoCategorias.toLowerCase() === "todas" ? []
+  : textoCategorias ? textoCategorias.split(",").map(s => s.trim()).filter(Boolean)
+  : CATEGORIAS_DEFECTO;
+const N = Math.max(1, Math.min(8, parseInt(params.get("n") || "3", 10) || 3));
+const SEGUNDOS = Math.max(4, parseInt(params.get("segundos") || "8", 10) || 8);
+const PAUSA = params.get("pausa") === "1";
+const BUCLE = params.get("bucle") === "1";
+const INICIO = parseInt(params.get("inicio") || "0", 10) || 0;
+
+const raiz = document.getElementById("raiz");
+const fechaLarga = new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "long" });
+
+// Texto plano a partir de un fragmento con HTML o entidades. Lo que viene del RSS
+// nunca se inserta como HTML: siempre con textContent.
+function textoPlano(s) {
+  return new DOMParser().parseFromString(s || "", "text/html").body.textContent.replace(/\s+/g, " ").trim();
+}
+const aHttps = u => (u || "").replace(/^http:\/\//i, "https://");
+const normalizar = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+function crear(etiqueta, clase, texto) {
+  const e = document.createElement(etiqueta);
+  if (clase) e.className = clase;
+  if (texto != null) e.textContent = texto;
+  return e;
+}
+
+async function leerRss() {
+  const control = new AbortController();
+  const plazo = setTimeout(() => control.abort(), 10000);
+  try {
+    const r = await fetch(URL_RSS, { signal: control.signal, cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const xml = new DOMParser().parseFromString(await r.text(), "application/xml");
+    const noticias = [...xml.querySelectorAll("channel > item")].map(it => {
+      const q = sel => (it.querySelector(sel)?.textContent || "").trim();
+      return {
+        titulo: textoPlano(q("title")),
+        resumen: textoPlano(q("description")),
+        enlace: aHttps(q("link")),
+        fecha: q("pubDate"),
+        autor: textoPlano(q("author")),
+        categoria: textoPlano(q("category")),
+        foto: aHttps(q("fotos > foto > url")),
+        pieFoto: textoPlano(q("fotos > foto > texto")),
+      };
+    }).filter(n => n.titulo);
+    if (!noticias.length) throw new Error("RSS vacío");
+    try { localStorage.setItem(CLAVE_CACHE, JSON.stringify(noticias)); } catch (e) {}
+    return noticias;
+  } catch (e) {
+    // Sin conexión o RSS caído: última copia buena, si la hay.
+    try {
+      const copia = JSON.parse(localStorage.getItem(CLAVE_CACHE) || "null");
+      if (Array.isArray(copia)) return copia;
+    } catch (e2) {}
+    return [];
+  } finally {
+    clearTimeout(plazo);
+  }
+}
+
+function elegir(noticias) {
+  const buscadas = CATEGORIAS.map(normalizar);
+  return noticias
+    .map(n => ({ ...n, fecha: new Date(n.fecha) }))
+    .filter(n => !buscadas.length || buscadas.includes(normalizar(n.categoria)))
+    .sort((x, y) => (y.fecha || 0) - (x.fecha || 0))
+    .slice(0, N);
+}
+
+function probarFoto(url) {
+  return new Promise(ok => {
+    if (!url) return ok(null);
+    const img = new Image();
+    const plazo = setTimeout(() => ok(null), 10000);
+    img.onload = () => { clearTimeout(plazo); ok(url); };
+    img.onerror = () => { clearTimeout(plazo); ok(null); };
+    img.src = url;
+  });
+}
+
+// Las fotos originales del RSS pueden pesar varios MB. SINC publica una copia de unos
+// 1300 px de ancho (la que usa su web) en «_aliases/img_1col/»: se prueba primero esa.
+async function cargarFoto(url) {
+  if (!url) return null;
+  const reducida = url.replace("/storage/images/", "/storage/images/_aliases/img_1col/");
+  return (reducida !== url && await probarFoto(reducida)) || probarFoto(url);
+}
+
+function ponerQr(contenedor, texto) {
+  if (typeof QRCode === "undefined" || !texto) return;
+  const caja = crear("div", "qr");
+  contenedor.prepend(caja);
+  new QRCode(caja, { text: texto, width: 256, height: 256, colorDark: "#0e1a2b", colorLight: "#ffffff",
+                     correctLevel: QRCode.CorrectLevel.M });
+}
+
+// Que todo quepa en la pantalla: primero se reduce la letra del titular (hasta que entre
+// en 4 líneas) y después se quitan líneas al resumen.
+function ajustar(texto, titular, resumen) {
+  titular.style.fontSize = "";
+  resumen.style.webkitLineClamp = "";
+  // El titular se mide sin recortar (en bloque) y se vuelve a recortar al final, por si acaso.
+  titular.style.display = "block";
+  titular.style.webkitLineClamp = "none";
+  const lineas = () => titular.getBoundingClientRect().height /
+                       (parseFloat(getComputedStyle(titular).fontSize) * 1.12);
+  for (let tam = 6.2; lineas() > 4.2 && tam > 4.7; ) {
+    tam -= 0.3;
+    titular.style.fontSize = tam.toFixed(1) + "vh";
+  }
+  titular.style.display = "";
+  titular.style.webkitLineClamp = "";
+  for (let n = 5; texto.scrollHeight > texto.clientHeight + 2 && n > 1; ) {
+    n -= 1;
+    resumen.style.webkitLineClamp = String(n);
+  }
+}
+
+async function mostrarNoticias(noticias) {
+  const marco = crear("div", "noticia oculto");
+  const figura = crear("figure", "foto");
+  const img = crear("img");
+  img.alt = "";
+  const pieFoto = crear("figcaption");
+  figura.append(img, pieFoto);
+  const texto = crear("section", "texto");
+  marco.append(figura, texto);
+  const progreso = crear("div", "progreso");
+  progreso.style.setProperty("--duracion", SEGUNDOS + "s");
+  noticias.forEach(() => progreso.append(crear("i")));
+  [...progreso.children].forEach(barra => barra.append(crear("b")));
+  raiz.append(marco, progreso);
+
+  const fotos = await Promise.all(noticias.map(n => cargarFoto(n.foto)));
+  let i = ((INICIO % noticias.length) + noticias.length) % noticias.length;
+
+  function mostrar() {
+    const n = noticias[i];
+    marco.classList.toggle("sin-foto", !fotos[i]);
+    progreso.style.left = fotos[i] ? "50%" : "0";
+    if (fotos[i]) img.src = fotos[i]; else img.removeAttribute("src");
+    pieFoto.textContent = n.pieFoto;
+    pieFoto.hidden = !n.pieFoto;
+
+    const meta = crear("div", "meta");
+    if (n.categoria) meta.append(crear("span", "cat", n.categoria));
+    if (!isNaN(n.fecha)) meta.append(crear("span", "fecha", fechaLarga.format(n.fecha)));
+    const pie = crear("div", "pie");
+    const fuente = crear("div", "fuente");
+    fuente.append(crear("b", null, "Lee la noticia completa"),
+                  document.createTextNode("Agencia SINC" + (n.autor && n.autor !== "SINC" ? " · " + n.autor : "")),
+                  crear("br"), document.createTextNode("Licencia CC BY 4.0"));
+    pie.append(fuente);
+    ponerQr(pie, n.enlace);
+    const titular = crear("h1", null, n.titulo);
+    const resumen = crear("p", "resumen", n.resumen);
+    texto.replaceChildren(meta, titular, resumen, pie);
+    ajustar(texto, titular, resumen);
+
+    [...progreso.children].forEach((barra, k) => {
+      barra.className = k < i ? "hecha" : k > i ? "" : PAUSA ? "pausa" : "activa";
+    });
+    marco.classList.remove("oculto");
+  }
+
+  // Si cambia el tamaño de la ventana (otra resolución), se vuelve a ajustar el texto.
+  window.addEventListener("resize", () => {
+    const titular = texto.querySelector("h1"), resumen = texto.querySelector(".resumen");
+    if (titular && resumen) ajustar(texto, titular, resumen);
+  });
+
+  mostrar();
+  if (PAUSA || noticias.length < 2) return;
+  const temporizador = setInterval(() => {
+    // Anthias vuelve a cargar la página cada vez que le toca: al acabar, se queda en la última.
+    if (!BUCLE && i === noticias.length - 1) return clearInterval(temporizador);
+    marco.classList.add("oculto");
+    setTimeout(() => { i = (i + 1) % noticias.length; mostrar(); }, 600);
+  }, SEGUNDOS * 1000);
+}
+
+function sinNoticias() {
+  const v = crear("div", "vacio");
+  const p = crear("p", null, "ETSII · Universidad Politécnica de Cartagena");
+  p.append(crear("small", null, "Noticias de ciencia y tecnología"));
+  v.append(p);
+  raiz.append(v);
+}
+
+(async () => {
+  const noticias = elegir(await leerRss());
+  // Medir con la letra definitiva (Inter), no con la de reserva.
+  try {
+    await Promise.race([
+      Promise.all(["400 30px Inter", "800 60px Inter"].map(f => document.fonts.load(f))),
+      new Promise(ok => setTimeout(ok, 3000)),
+    ]);
+  } catch (e) {}
+  if (noticias.length) mostrarNoticias(noticias); else sinNoticias();
+})();
+</script>
+</body>
+</html>
