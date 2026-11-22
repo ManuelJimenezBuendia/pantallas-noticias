@@ -31,16 +31,18 @@ muestra, así que al acabar la tercera noticia se queda en ella.
 |---|---|---|
 | `categorias` | `Ciencia,Tecnología,Innova,Tierra` | Secciones separadas por comas: `Ciencia`, `Tecnología`, `Innova`, `Tierra`, `Salud`, `Sociedad` (da igual con o sin tildes y mayúsculas); `todas` para no filtrar |
 | `segundos` | `8` | Segundos por noticia (mínimo 4) |
-| `duracion` | — | Duración total en segundos, **la misma que se pone en Anthias**: la página calcula cuántas noticias caben, dejando 5 s para la carga. Manda sobre `n` |
+| `duracion` | — | Duración total en segundos, **la misma que se pone en Anthias**: la página calcula cuántas noticias caben, dejando 5 s para la carga; si no hay bastantes, vuelve a empezar. Manda sobre `n` |
 | `n` | `3` | Noticias que se muestran si no se indica `duracion` (1 a 60) |
 | `bucle` | — | `1`: vuelve a empezar al acabar (para verla en un navegador) |
 | `pausa`, `inicio` | — | `pausa=1` no pasa de noticia; `inicio=k` empieza en la k-ésima (para capturas) |
 
 Con más de 8 noticias, la barra de progreso es solo la de la noticia actual, con un contador
-(«4 / 25»). Si en las secciones elegidas hay menos noticias de las que caben, se muestran las que
-haya y la página se queda en la última. El RSS trae las 150 últimas noticias (unas seis
-semanas); Tierra y Salud son las secciones con más, y Tecnología e Innova publican muy pocas:
-filtrando solo esas, salen pocas noticias y algunas de hace semanas.
+(«4 / 25»). Con `duracion`, si en las secciones elegidas hay menos noticias de las que caben (o
+caben más de 60), se muestran las que haya y se **vuelve a empezar desde la primera** hasta que
+Anthias pase al siguiente contenido. Sin `duracion`, al acabar se queda en la última. El RSS
+trae las 150 últimas noticias (unas seis semanas); Tierra y Salud son las secciones con más, y
+Tecnología e Innova publican muy pocas: filtrando solo esas, salen pocas noticias y algunas de
+hace semanas.
 
 Ejemplos:
 | Dirección | Noticias | Duración en Anthias |

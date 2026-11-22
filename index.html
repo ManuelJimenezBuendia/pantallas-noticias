@@ -22,6 +22,7 @@
     duracion=305                    duración total, la misma que en Anthias: la página calcula
                                     cuántas noticias caben, dejando 5 s para la carga
                                     (305 s y 12 s por noticia → 25 noticias). Manda sobre n.
+                                    Si no hay noticias para llenarla, vuelve a empezar.
     n=3                             noticias que se muestran, si no se indica la duración
                                     (1 a 60; con más de 8, la barra de progreso es de la
                                     noticia actual, con un contador «3 / 25»)
@@ -323,10 +324,12 @@ async function mostrarNoticias(noticias) {
   await mostrar();
   if (PAUSA || noticias.length < 2) return;
   // Cada noticia dura SEGUNDOS, contando el fundido de 0,6 s. Anthias vuelve a cargar la
-  // página cada vez que le toca: al acabar, se queda en la última (salvo con bucle=1).
+  // página cada vez que le toca: al acabar, se queda en la última. Vuelve a empezar con
+  // bucle=1 o si, con una duración indicada, no hay noticias para llenarla.
+  const repetir = BUCLE || (DURACION > 0 && noticias.length * SEGUNDOS < DURACION - MARGEN_CARGA);
   (function programar() {
     setTimeout(async () => {
-      if (!BUCLE && i === noticias.length - 1) return;
+      if (!repetir && i === noticias.length - 1) return;
       marco.classList.add("oculto");
       await Promise.all([foto(siguiente(i)), new Promise(ok => setTimeout(ok, 600))]);
       i = siguiente(i);
