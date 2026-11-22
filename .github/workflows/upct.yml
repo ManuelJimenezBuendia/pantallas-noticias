@@ -9,8 +9,7 @@ on:
   workflow_dispatch:   # para lanzarla a mano desde la pestaña «Actions» de GitHub
 
 permissions:
-  contents: write      # guardar datos/upct.json
-  pages: write         # volver a publicar la página
+  contents: write      # guardar datos/upct.json (el push vuelve a publicar la página)
 
 concurrency:
   group: noticias-upct
@@ -25,9 +24,7 @@ jobs:
       - name: Leer las noticias de la UPCT
         run: python3 scripts/upct.py datos/upct.json
 
-      - name: Guardar los cambios y publicar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Guardar los cambios
         run: |
           if git diff --quiet -- datos/upct.json; then
             echo "Sin cambios."
@@ -39,7 +36,3 @@ jobs:
           git commit -m "Noticias de la UPCT: actualización automática"
           git pull --rebase
           git push
-          # Por si el push de la tarea no vuelve a publicar la página por sí solo.
-          curl -fsS -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
-               -H "Accept: application/vnd.github+json" \
-               "https://api.github.com/repos/$GITHUB_REPOSITORY/pages/builds" || true
