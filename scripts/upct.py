@@ -7,6 +7,8 @@ programada de GitHub (.github/workflows/upct.yml) cada hora:
 - lee el listado de noticias de actualidad (una página, unas 13 noticias);
 - de cada noticia nueva lee su página para sacar el resumen (la entradilla o, si no tiene, el
   primer párrafo) y la foto mediana (1200x800); las que ya estaban no se vuelven a pedir;
+- guarda las 20 más recientes (la página muestra 20 por defecto): las del listado y, detrás,
+  las que ya tenía y han salido de él;
 - solo reescribe el JSON si las noticias han cambiado (así no hay un commit cada hora);
 - si no encuentra ninguna noticia (la web ha cambiado), no toca el JSON y termina con error
   para que GitHub avise.
@@ -24,7 +26,7 @@ from datetime import datetime, timezone
 
 LISTADO = "https://www.upct.es/destacados/noticias.php?ubicacion=general&op=2"
 AGENTE = "pantallas-noticias/1.0"
-MAXIMO = 15       # noticias que se guardan (el listado trae unas 13)
+MAXIMO = 20       # noticias que se guardan: el listado trae unas 13, el resto son anteriores
 PAUSA = 1.0       # segundos entre peticiones, para no cargar la web
 MESES = {m: i + 1 for i, m in enumerate("ene feb mar abr may jun jul ago sep oct nov dic".split())}
 MESES.update({"jan": 1, "apr": 4, "aug": 8, "dec": 12})
@@ -124,6 +126,11 @@ def main():
             nuevas += 1
         except Exception as e:  # una noticia que falla no para el resto (se reintenta en la próxima)
             print("aviso:", noticia["enlace"], e, file=sys.stderr)
+
+    # Detrás, las que ya se tenían y han salido del listado, hasta llegar a MAXIMO.
+    en_listado = {n["enlace"] for n in listado}
+    salidas = [n for n in anteriores if n["enlace"] not in en_listado]
+    noticias += salidas[:max(0, MAXIMO - len(noticias))]
 
     if noticias == anteriores:
         print(f"Sin cambios ({len(noticias)} noticias).")

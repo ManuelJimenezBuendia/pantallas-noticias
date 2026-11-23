@@ -15,9 +15,9 @@
     deja leerla desde otra web.
   Muestra las últimas noticias, una cada vez, con foto, resumen y un QR a la noticia completa.
 
-  Sin parámetros: SINC, todas las secciones, 12 s por noticia y 305 s en total (25 noticias;
-  en Anthias, 305 s). Con fuente=upct: 10 noticias de 12 s, 125 s en Anthias, foto a pantalla
-  completa.
+  Sin parámetros, con las dos fuentes: 20 noticias de 12 s, 245 s en total (en Anthias, 245 s).
+  SINC, de todas las secciones y con la foto a media pantalla; la UPCT (fuente=upct), con la foto
+  a pantalla completa.
 
   Parámetros opcionales de la URL:
     fuente=upct                     noticias de la UPCT (sin secciones: no admite categorias)
@@ -27,9 +27,9 @@
                                     Tecnología, Innova, Tierra, Salud y Sociedad (sin importar
                                     tildes ni mayúsculas)
     segundos=12                     segundos por noticia
-    duracion=305                    duración total, la misma que en Anthias: la página calcula
+    duracion=245                    duración total, la misma que en Anthias: la página calcula
                                     cuántas noticias caben, dejando 5 s para la carga
-                                    (305 s y 12 s por noticia → 25 noticias). Manda sobre n.
+                                    (245 s y 12 s por noticia → 20 noticias). Manda sobre n.
                                     Si no hay noticias para llenarla, vuelve a empezar.
     n=3                             en vez de la duración, el número de noticias; al acabar se
                                     queda en la última (1 a 60; con más de 8, la barra de
@@ -168,9 +168,9 @@ const params = new URLSearchParams(location.search);
 // Fuente: SINC (por defecto) o la UPCT.
 const UPCT = (params.get("fuente") || "").trim().toLowerCase() === "upct";
 const CLAVE_CACHE = UPCT ? "noticias_upct" : "noticias_sinc";
-// Valores por defecto: 12 s por noticia; SINC, 305 s (25 noticias); UPCT, 125 s (10 noticias).
+// Valores por defecto, con las dos fuentes: 20 noticias de 12 s, 245 s (20 × 12 y 5 de carga).
 const SEGUNDOS_DEFECTO = 12;
-const DURACION_DEFECTO = UPCT ? 125 : 305;
+const DURACION_DEFECTO = 245;
 // Diseño: foto a pantalla completa (por defecto en la UPCT, con fotos apaisadas de actos) o a
 // media pantalla (por defecto en SINC).
 const DISENO = (params.get("diseno") || "").trim().toLowerCase();
