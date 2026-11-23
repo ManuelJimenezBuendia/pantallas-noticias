@@ -88,7 +88,10 @@ def completar(noticia):
             if len(texto(parrafo)) > 40:
                 noticia["resumen"] = texto(parrafo)
                 break
-    mediana = re.search(r'<meta name="twitter:image" content="([^"]*imagenes_medianas[^"]*)"', pagina)
+    # La primera dirección de /imagenes_medianas/ de la página: en noviembre de 2026 la UPCT dejó
+    # comentada la etiqueta twitter:image que la llevaba; la foto principal de la noticia también
+    # la usa (con dirección relativa). Las demás noticias de la página van con /imagenes/.
+    mediana = re.search(r'["\']([^"\']*/imagenes_medianas/[^"\']+)["\']', pagina)
     if mediana:
         noticia["fotoMediana"] = url_limpia(mediana.group(1), noticia["enlace"])
     if not noticia["fecha"]:
