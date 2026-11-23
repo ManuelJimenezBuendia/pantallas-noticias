@@ -89,7 +89,7 @@ Anthias vuelve a cargar la página cada vez que la muestra.
 | `n` | — | En vez de la duración, el número de noticias (1 a 60); al acabar se queda en la última |
 | `bucle` | — | `1`: vuelve a empezar al acabar (para verla en un navegador) |
 | `vertical` | según la ventana | `1`: pantalla vertical (foto arriba y texto debajo, con las dos fuentes; no admite `diseno=foto`). Si la ventana ya es vertical, se usa sola, sin el parámetro. Si es horizontal (solo se ha girado el monitor), la página se gira 90° a la derecha; `izquierda`, hacia el otro lado (si el texto sale boca abajo); `0`, siempre horizontal |
-| `escuela` | `etsii` | Logo del centro. Siglas o un nombre corto (da igual con o sin tildes y mayúsculas): `etsii` o `industriales`; `etsit` o `teleco`; `etsia` o `agronomos`; `etsae` o `arquitectura`; `etsino` o `naval`; `etsiccpim` o `caminos`; `fce` o `empresa`; `cud` o `defensa`; `doctorado`; `formacion`. Si no se reconoce, la ETSII |
+| `escuela` | `etsii` | Logo del centro. Siglas o un nombre corto (da igual con o sin tildes y mayúsculas): `etsii` o `industriales`; `etsit` o `teleco`; `etsia` o `agronomos`; `etsae` o `arquitectura`; `etsino` o `naval`; `eicm` o `caminos`; `fce` o `empresa`; `cud` o `defensa`; `doctorado`; `formacion`. Si no se reconoce, la ETSII |
 | `pausa`, `inicio` | — | `pausa=1` no pasa de noticia; `inicio=k` empieza en la k-ésima (para capturas) |
 
 Con más de 8 noticias, la barra de progreso es solo la de la noticia actual, con un contador
