@@ -12,6 +12,9 @@ tipo web, a 1920×1080 o cualquier resolución 16:9). La usa la ETSII de la UPCT
 - **UPCT** (`?fuente=upct`): también las **20 últimas noticias**, **12 s cada una**, con la
   foto a pantalla completa y el texto encima (las fotos de la UPCT son apaisadas, de actos con
   gente, y a media pantalla se recortarían).
+- **Pantalla vertical** (`?vertical=1`), con las dos fuentes: la foto arriba, a todo el ancho y
+  sin recortar, y el texto debajo. Si la Raspberry gira la imagen, la página lo detecta sola; si
+  solo se ha girado el monitor, la página se gira ella misma.
 - En cada noticia: el **logo de la UPCT · ETSII** (arriba a la derecha), la foto, la fecha, el
   titular, el resumen y un **QR** a la noticia completa, con la fuente. En SINC, además, la
   sección, el pie de foto, el autor y la licencia.
@@ -64,6 +67,14 @@ de 8 s; **26 s** en Anthias):
 https://manueljimenezbuendia.github.io/pantallas-noticias/?categorias=ciencia,tecnologia,innova,tierra&n=3&segundos=8
 ```
 
+En una **pantalla vertical** se añade `vertical=1`, con la misma duración (si el texto sale boca
+abajo, `vertical=izquierda`):
+
+```
+https://manueljimenezbuendia.github.io/pantallas-noticias/?vertical=1
+https://manueljimenezbuendia.github.io/pantallas-noticias/?fuente=upct&vertical=1
+```
+
 Anthias vuelve a cargar la página cada vez que la muestra.
 
 ## Parámetros (opcionales, en la dirección)
@@ -76,6 +87,7 @@ Anthias vuelve a cargar la página cada vez que la muestra.
 | `duracion` | `245` (20 noticias) | Duración total en segundos, **la misma que se pone en Anthias**: la página calcula cuántas noticias caben, dejando 5 s para la carga; si no hay bastantes, vuelve a empezar. Manda sobre `n` |
 | `n` | — | En vez de la duración, el número de noticias (1 a 60); al acabar se queda en la última |
 | `bucle` | — | `1`: vuelve a empezar al acabar (para verla en un navegador) |
+| `vertical` | según la ventana | `1`: pantalla vertical (foto arriba y texto debajo, con las dos fuentes; no admite `diseno=foto`). Si la ventana ya es vertical, se usa sola, sin el parámetro. Si es horizontal (solo se ha girado el monitor), la página se gira 90° a la derecha; `izquierda`, hacia el otro lado (si el texto sale boca abajo); `0`, siempre horizontal |
 | `pausa`, `inicio` | — | `pausa=1` no pasa de noticia; `inicio=k` empieza en la k-ésima (para capturas) |
 
 Con más de 8 noticias, la barra de progreso es solo la de la noticia actual, con un contador
