@@ -45,6 +45,11 @@
                                     monitor), la página se gira 90° a la derecha; con «izquierda»,
                                     hacia el otro lado (si el texto sale boca abajo). vertical=0:
                                     siempre horizontal.
+    escuela=etsii                   logo del centro (por defecto, la ETSII): etsii, etsit, etsia,
+                                    etsae, etsino, etsiccpim, fce, cud, doctorado o formacion; o
+                                    un nombre corto: industriales, teleco, agronomos, arquitectura,
+                                    naval, caminos, empresa, defensa... (ver ESCUELAS). Logos de la
+                                    identidad corporativa de la UPCT, en recursos/logos/.
 -->
 <style>
   @font-face {
@@ -98,7 +103,11 @@
   }
   /* Logo de la UPCT · ETSII (en blanco), arriba a la derecha del texto */
   .marca { flex: none; display: flex; justify-content: flex-end; margin-bottom: calc(3.2 * var(--u)); }
-  .marca img { display: block; height: calc(6 * var(--u)); aspect-ratio: 927 / 109; }
+  /* Cada logo tiene su proporción (su width y height); si no cupiera, se reduce sin deformarse. */
+  .marca img {
+    display: block; height: calc(6 * var(--u)); width: auto; max-width: 100%;
+    object-fit: contain; object-position: right center;
+  }
   .meta { display: flex; align-items: center; gap: calc(2.2 * var(--u)); font-size: calc(2.6 * var(--u)); color: var(--suave); }
   .cat {
     background: var(--acento); color: #1b1206; font-weight: 800;
@@ -170,7 +179,7 @@
 
   .vacio { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
   .vacio p { font-size: calc(5 * var(--u)); font-weight: 800; }
-  .vacio img { display: block; width: min(calc(.76 * var(--ancho)), calc(135 * var(--u))); aspect-ratio: 927 / 109; margin: 0 auto; }
+  .vacio img { display: block; width: min(calc(.76 * var(--ancho)), calc(135 * var(--u))); height: auto; margin: 0 auto; }
   .vacio small { display: block; margin-top: calc(4 * var(--u)); font-size: calc(3.2 * var(--u)); color: var(--suave); font-weight: 400; }
 
   /* Pantalla vertical: foto arriba, a todo el ancho y sin recortar (3:2); el texto debajo. */
@@ -243,8 +252,38 @@ const BUCLE = params.get("bucle") === "1";
 const INICIO = parseInt(params.get("inicio") || "0", 10) || 0;
 
 const raiz = document.getElementById("raiz");
-const LOGO = "recursos/logo-upct-etsii.svg";
-const NOMBRE_CENTRO = "ETSII · Universidad Politécnica de Cartagena";
+// Centro (escuela=siglas o un nombre corto; por defecto, la ETSII): cambia el logo. Logos de la
+// identidad corporativa de la UPCT, en negativo y sin fondo, en recursos/logos/<clave>.svg.
+const ESCUELAS = {
+  etsii:     { corto: "ETSII", alias: ["industriales", "industrial"],
+               nombre: "Escuela Técnica Superior de Ingeniería Industrial" },
+  etsit:     { corto: "ETSIT", alias: ["teleco", "telecomunicacion"],
+               nombre: "Escuela Técnica Superior de Ingeniería de Telecomunicación" },
+  etsia:     { corto: "ETSIA", alias: ["agronomos", "agronomica"],
+               nombre: "Escuela Técnica Superior de Ingeniería Agronómica" },
+  etsae:     { corto: "ETSAE", alias: ["arquitectura", "edificacion"],
+               nombre: "Escuela Técnica Superior de Arquitectura y Edificación" },
+  etsino:    { corto: "ETSINO", alias: ["naval"],
+               nombre: "Escuela Técnica Superior de Ingeniería Naval y Oceánica" },
+  etsiccpim: { corto: "ETSICCPIM", alias: ["caminos", "minas"],
+               nombre: "Escuela Técnica Superior de Ingeniería de Caminos, Canales y Puertos y de Ingeniería de Minas" },
+  fce:       { corto: "Facultad de Ciencias de la Empresa", alias: ["empresa"],
+               nombre: "Facultad de Ciencias de la Empresa" },
+  cud:       { corto: "Centro Universitario de la Defensa", alias: ["defensa"],
+               nombre: "Centro Universitario de la Defensa · Academia General del Aire" },
+  doctorado: { corto: "Escuela Internacional de Doctorado", alias: ["eindoc"],
+               nombre: "Escuela Internacional de Doctorado" },
+  formacion: { corto: "Escuela de Formación Continua", alias: ["formacion-continua"],
+               nombre: "Escuela de Formación Continua" },
+};
+const escuelaPedida = (params.get("escuela") || "").trim().normalize("NFD")
+  .replace(/[̀-ͯ]/g, "").toLowerCase();
+const CLAVE_ESCUELA = Object.keys(ESCUELAS).find(k => k === escuelaPedida ||
+  ESCUELAS[k].alias.includes(escuelaPedida)) || "etsii";
+const ESCUELA = ESCUELAS[CLAVE_ESCUELA];
+const LOGO = "recursos/logos/" + CLAVE_ESCUELA + ".svg";
+// Texto en lugar del logo, si no se puede cargar.
+const NOMBRE_CENTRO = ESCUELA.corto + " · Universidad Politécnica de Cartagena";
 const fechaLarga = new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "long" });
 
 // Texto plano a partir de un fragmento con HTML o entidades. Lo que viene del RSS
@@ -265,7 +304,7 @@ function crear(etiqueta, clase, texto) {
 // Logo del centro; si no se puede cargar, en su lugar se pone el nombre (o nada).
 function crearLogo(alFallar) {
   const img = crear("img");
-  img.alt = NOMBRE_CENTRO;
+  img.alt = "UPCT · " + ESCUELA.nombre;
   img.onerror = alFallar;
   img.src = LOGO;
   return img;

@@ -15,7 +15,8 @@ tipo web, a 1920×1080 o cualquier resolución 16:9). La usa la ETSII de la UPCT
 - **Pantalla vertical** (`?vertical=1`), con las dos fuentes: la foto arriba, a todo el ancho y
   sin recortar, y el texto debajo. Si la Raspberry gira la imagen, la página lo detecta sola; si
   solo se ha girado el monitor, la página se gira ella misma.
-- En cada noticia: el **logo de la UPCT · ETSII** (arriba a la derecha), la foto, la fecha, el
+- En cada noticia: el **logo del centro** (arriba a la derecha; por defecto, la ETSII; cualquier
+  otro centro de la UPCT con `?escuela=`), la foto, la fecha, el
   titular, el resumen y un **QR** a la noticia completa, con la fuente. En SINC, además, la
   sección, el pie de foto, el autor y la licencia.
 - Un fundido entre noticias, una barra de progreso y un contador («4 / 25»). Todo se puede
@@ -37,7 +38,7 @@ tipo web, a 1920×1080 o cualquier resolución 16:9). La usa la ETSII de la UPCT
   hay noticias nuevas. Si no encuentra ninguna (por ejemplo, porque la UPCT ha cambiado su web),
   no toca los datos y la tarea falla: GitHub avisa por correo. Se puede lanzar a mano en la
   pestaña **Actions** del repositorio («Noticias de la UPCT» → «Run workflow»).
-- La letra (Inter), el generador de QR y el logo van en `recursos/`: la pantalla solo necesita
+- La letra (Inter), el generador de QR y los logos van en `recursos/`: la pantalla solo necesita
   llegar a esta página, a `agenciasinc.es` y a `www.upct.es` (fotos).
 - Para probarla en un ordenador: SINC, abriendo `index.html` como fichero (`file:///…`), porque
   SINC responde a `localhost` y `127.0.0.1` con una cabecera CORS doble que el navegador rechaza
@@ -88,6 +89,7 @@ Anthias vuelve a cargar la página cada vez que la muestra.
 | `n` | — | En vez de la duración, el número de noticias (1 a 60); al acabar se queda en la última |
 | `bucle` | — | `1`: vuelve a empezar al acabar (para verla en un navegador) |
 | `vertical` | según la ventana | `1`: pantalla vertical (foto arriba y texto debajo, con las dos fuentes; no admite `diseno=foto`). Si la ventana ya es vertical, se usa sola, sin el parámetro. Si es horizontal (solo se ha girado el monitor), la página se gira 90° a la derecha; `izquierda`, hacia el otro lado (si el texto sale boca abajo); `0`, siempre horizontal |
+| `escuela` | `etsii` | Logo del centro. Siglas o un nombre corto (da igual con o sin tildes y mayúsculas): `etsii` o `industriales`; `etsit` o `teleco`; `etsia` o `agronomos`; `etsae` o `arquitectura`; `etsino` o `naval`; `etsiccpim` o `caminos`; `fce` o `empresa`; `cud` o `defensa`; `doctorado`; `formacion`. Si no se reconoce, la ETSII |
 | `pausa`, `inicio` | — | `pausa=1` no pasa de noticia; `inicio=k` empieza en la k-ésima (para capturas) |
 
 Con más de 8 noticias, la barra de progreso es solo la de la noticia actual, con un contador
@@ -121,7 +123,8 @@ satura la Raspberry.
 - **Noticias de la UPCT**: textos y fotos de la Universidad Politécnica de Cartagena, de su web.
   En `datos/upct.json` se guardan solo el titular, la fecha, el resumen, el pie de foto y los
   enlaces; las fotos se leen de `www.upct.es`.
-- **Logo** (`recursos/logo-upct-etsii.svg`): de la Universidad Politécnica de Cartagena y su
-  Escuela Técnica Superior de Ingeniería Industrial; no está bajo ninguna licencia libre.
+- **Logos** (`recursos/logos/`): de la Universidad Politécnica de Cartagena y sus centros, de su
+  identidad corporativa (versión para fondo negro, sin el fondo y recortada); no están bajo
+  ninguna licencia libre.
 - **Letra Inter**: SIL Open Font License 1.1 (`recursos/OFL-Inter.txt`).
 - **qrcodejs** (davidshimjs): licencia MIT (`recursos/LICENSE-qrcodejs.txt`).
