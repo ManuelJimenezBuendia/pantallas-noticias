@@ -1,7 +1,52 @@
 {
  "fuente": "https://www.upct.es/destacados/noticias.php?ubicacion=general&op=2",
- "actualizado": "2026-11-23T16:06:05+00:00",
+ "actualizado": "2026-11-24T15:57:29+00:00",
  "noticias": [
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-24-la-politecnica-de-riga-acoge-la-semana-de-revision-anual-de-eut",
+   "titulo": "La politécnica de Riga acoge la Semana de Revisión Anual de EUt+",
+   "fecha": "2026-11-24",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18611WhatsApp%20Image%202026-11-24%20at%2013.34.18%20%281%29.jpeg",
+   "pieFoto": "Representantes de la UPCT, esta semana en la RTU.",
+   "resumen": "La Universidad Técnica de Riga (RTU) acoge desde ayer la Semana de Revisión Anual de EUt+, reuniendo a representantes de la alianza de Universidades Tecnológicas Europeas (EUt+) en el Campus de Ķīpsala para reflexionar sobre el progreso en las áreas clave de actividad de la alianza y debatir las prioridades para el próximo año.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18611WhatsApp%20Image%202026-11-24%20at%2013.34.18%20%281%29.jpeg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-24-la-mejor-publicacion-sobre-transporte-terrestre-de-los-ultimos-cinco-anos-premio-internacional-a-investigadores-de-la-upct",
+   "titulo": "La mejor publicación sobre transporte terrestre de los últimos cinco años: premio internacional a investigadores de la UPCT",
+   "fecha": "2026-11-24",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18610IMG_9741.jpg",
+   "pieFoto": "María Dolores Cano junto con el galardón obtenido.",
+   "resumen": "La sociedad científica IEEE Vehicular Technology Society ha distinguido el trabajo de María Dolores Cano y Antonio Guillén sobre AI aplicada a vehículos autónomos conectados",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18610IMG_9741.jpg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-23-la-catedra-de-navantia-premia-a-cinco-estudiantes-por-sus-trabajos-sobre-tecnologias-submarinas",
+   "titulo": "La cátedra de Navantia premia a cinco estudiantes por sus trabajos sobre tecnologías submarinas",
+   "fecha": "2026-11-24",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_186098T7A6769.JPG",
+   "pieFoto": "Fotografía de grupo de los premiados, sus directores y quienes les han entregado las distinciones.",
+   "resumen": "Han sido distinguidos Ana Abenza Alonso, Jorge Aguirre Escarabajal, Luis Marqués Domingo, Guillermo Martínez Pérez y Fernando González del Tanago Landín",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_186098T7A6769.JPG"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-24-oportunidades-de-negocio-retos-tecnologicos-y-startups-verdes-a-debate-en-el-talentforum-de-este-jueves",
+   "titulo": "Oportunidades de negocio, retos tecnológicos y startups verdes, a debate en el Talent+FORUM de este jueves",
+   "fecha": "2026-11-24",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18608img_18583img_1855320261104-talent-forum-banner.jpg",
+   "pieFoto": "Cartel del evento.",
+   "resumen": "La Universidad Politécnica de Cartagena debate este jueves 26 de noviembre las oportunidades de emprendimiento que ofrecen las tecnologías verdes, a través de un programa de mesas redondas y presentaciones empresariales que reunirá a profesionales, investigadores y representantes de proyectos innovadores.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18608img_18583img_1855320261104-talent-forum-banner.jpg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-18-yincana-cientifico-tecnologica-en-el-fablab-para-formar-a-los-investigadores-de-bachillerato-del-simip-2027",
+   "titulo": "Yincana científico-tecnológica en el FabLab para formar a los investigadores de Bachillerato del SIMIP 2027",
+   "fecha": "2026-11-23",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18607DSC_7752.JPG",
+   "pieFoto": "Lola Ojados, del FabLab, durante la yincana.",
+   "resumen": "90 estudiantes de los IES San Isidoro, Mediterráneo e Isaac Peral, que imparten el Bachillerato de Investigación y participan en la iniciativa SIMIP que coordina la UPCT, realizaron el pasado miércoles una yincana científico-tecnológica en el laboratorio de fabricación (FabLab) de la Universidad Politécnica de Cartagena.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18607DSC_7752.JPG"
+  },
   {
    "enlace": "https://www.upct.es/noticias/2026-11-23-estudiantes-de-la-politecnica-de-cartagena-y-de-la-universidad-de-murcia-ganan-el-ciber-reto-integra-2026",
    "titulo": "Estudiantes de la Politécnica de Cartagena y de la Universidad de Murcia ganan el Ciber Reto Integra 2026",
