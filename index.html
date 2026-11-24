@@ -15,14 +15,19 @@
     deja leerla desde otra web.
   Muestra las últimas noticias, una cada vez, con foto, resumen y un QR a la noticia completa.
 
+  Diseño según el Manual de Identidad Corporativa de la UPCT (2026), «Sistema visual»
+  (pp. 61-64): retícula de 3 columnas y 5 filas (5 × 3 en vertical) en la que foto, texto y
+  manchas de color (el del centro, blanco y negro) ocupan módulos enteros. Titular, fechas y
+  avisos en Funnel Sans Medium; el texto corrido, en Inter (en lugar de Helvetica Now Text, que
+  es de pago). Color de cada centro y color del texto encima: pp. 54-55.
+
   Sin parámetros, con las dos fuentes: 20 noticias de 12 s, 245 s en total (en Anthias, 245 s).
-  SINC, de todas las secciones y con la foto a media pantalla; la UPCT (fuente=upct), con la foto
-  a pantalla completa.
 
   Parámetros opcionales de la URL:
     fuente=upct                     noticias de la UPCT (sin secciones: no admite categorias)
-    diseno=foto | mitad             foto a pantalla completa con el texto encima (por defecto
-                                    en la UPCT) o foto a media pantalla (por defecto en SINC)
+    diseno=foto | mitad             foto a sangre, con el titular en un bloque abajo (foto), o foto
+                                    entera, sin recortar, junto a la columna del titular (mitad,
+                                    por defecto con las dos fuentes)
     categorias=Ciencia,Tecnología   secciones (por defecto, todas). Las de SINC: Ciencia,
                                     Tecnología, Innova, Tierra, Salud y Sociedad (sin importar
                                     tildes ni mayúsculas)
@@ -38,18 +43,19 @@
     bucle=1                         vuelve a empezar al acabar (si no, se queda en la última,
                                     porque Anthias recarga la página cada vez que la muestra)
     pausa=1                        no pasa de noticia (para capturas); inicio=k empieza en la k-ésima
-    vertical=1 | izquierda          pantalla vertical: foto arriba, a todo el ancho y sin recortar,
-                                    y el texto debajo (con las dos fuentes; no admite diseno=foto).
+    vertical=1 | izquierda          pantalla vertical: retícula de 5 × 3, con la foto arriba, el
+                                    titular en medio y el resto abajo (no admite diseno=foto).
                                     Si la ventana es vertical (la Raspberry gira la imagen), se usa
                                     sola, sin el parámetro. Si es horizontal (solo se ha girado el
                                     monitor), la página se gira 90° a la derecha; con «izquierda»,
                                     hacia el otro lado (si el texto sale boca abajo). vertical=0:
                                     siempre horizontal.
-    escuela=etsii                   logo del centro (por defecto, la ETSII): etsii, etsit, etsia,
-                                    etsae, etsino, eicm, fce, cud, doctorado o formacion; o
-                                    un nombre corto: industriales, teleco, agronomos, arquitectura,
-                                    naval, caminos, empresa, defensa... (ver ESCUELAS). Logos de la
-                                    identidad corporativa de la UPCT, en recursos/logos/.
+    escuela=etsii                   centro (por defecto, la ETSII): cambia el logo y el color.
+                                    etsii, etsit, etsia, etsae, etsino, eicm, fce, cud, doctorado
+                                    o formacion; o un nombre corto: industriales, teleco,
+                                    agronomos, arquitectura, naval, caminos, empresa, defensa...
+                                    (ver ESCUELAS). Logos de la identidad corporativa de la UPCT,
+                                    en recursos/logos/.
 -->
 <style>
   @font-face {
@@ -59,16 +65,23 @@
     font-display: swap;
     src: url("recursos/inter-latin.woff2") format("woff2");
   }
+  /* Tipografía de la UPCT para titulares, fechas y webs (Google Fonts, licencia OFL). */
+  @font-face {
+    font-family: "Funnel Sans";
+    font-style: normal;
+    font-weight: 300 800;
+    font-display: swap;
+    src: url("recursos/funnel-sans-latin.woff2") format("woff2");
+  }
   :root {
-    --fondo: #0e1a2b;
-    --panel: #132540;
-    --texto: #ffffff;
-    --suave: #b8c5d8;
-    --acento: #f28c28;
-    --linea: #2a3f5f;
+    /* Color del centro y del texto encima (blanco o negro, según el manual); los pone el script. */
+    --color: #9b0000;
+    --tinta: #ffffff;
     /* Unidad de los tamaños: 1 % del alto en horizontal, 1 % del ancho en vertical. */
     --u: 1vh;
     --ancho: 100vw;
+    --margen: calc(3.6 * var(--u));
+    --titulares: "Funnel Sans", Inter, Arial, sans-serif;
   }
   .vertical { --u: 1vw; }
   /* Pantalla girada sin que la Raspberry gire la imagen: el ancho útil es el alto de la ventana. */
@@ -76,8 +89,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     width: 100vw; height: 100vh; overflow: hidden;
-    background: var(--fondo); color: var(--texto);
-    font-family: Inter, "DejaVu Sans", Arial, sans-serif;
+    background: #000; color: #fff;
+    font-family: "Helvetica Now Text", Inter, "DejaVu Sans", Arial, sans-serif;
   }
   #raiz { position: fixed; inset: 0; overflow: hidden; }
   .girar #raiz {
@@ -86,119 +99,135 @@
   }
   .girar.izquierda #raiz { transform: translate(-50%, -50%) rotate(-90deg); }
 
-  .noticia { position: absolute; inset: 0; display: grid; grid-template-columns: 50% 50%; grid-template-rows: 100vh; }
-  .noticia.sin-foto { grid-template-columns: 100%; }
-  .foto { position: relative; overflow: hidden; background: #000; }
-  .sin-foto .foto { display: none; }
+  /* Retícula: 3 columnas × 5 filas (módulos apaisados, como en el manual). Cada bloque ocupa
+     módulos enteros (grid-area: fila inicial / columna inicial / fila final / columna final). */
+  .noticia {
+    position: absolute; inset: 0; display: grid;
+    grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(5, 1fr);
+  }
+  .bloque { position: relative; overflow: hidden; min-width: 0; min-height: 0; }
+
+  /* Diseño «mitad» (por defecto): la foto entera (3:2, sin recortar) en 2 × 4 módulos; a su
+     izquierda, el logo sobre negro y el titular en el color del centro, que dobla abajo, bajo la
+     foto, con el resumen; en la esquina, el QR sobre blanco. */
+  .foto    { grid-area: 1 / 2 / 5 / 4; background: #000; }
+  .marca   { grid-area: 1 / 1 / 2 / 2; background: #000; }
+  .titulo  { grid-area: 2 / 1 / 6 / 2; background: var(--color); color: var(--tinta); }
+  .resumen { grid-area: 5 / 2 / 6 / 3; background: var(--color); color: var(--tinta); }
+  .pie     { grid-area: 5 / 3 / 6 / 4; background: #fff; color: #000; }
+
+  /* Diseño «foto»: la foto a sangre; el titular, en un bloque de 2 × 2 módulos abajo a la
+     izquierda; el resumen y el QR, en blanco a su derecha, y el logo, arriba a la derecha. */
+  .a-sangre .foto    { grid-area: 1 / 1 / 6 / 4; }
+  .a-sangre .marca   { grid-area: 1 / 3 / 2 / 4; }
+  .a-sangre .titulo  { grid-area: 4 / 1 / 6 / 3; }
+  .a-sangre .resumen { grid-area: 4 / 3 / 5 / 4; background: #fff; color: #000; }
+  .a-sangre .pie     { grid-area: 5 / 3 / 6 / 4; }
+  .a-sangre .foto figcaption { display: none; }
+  .a-sangre .foto img { object-position: center 35%; }
+
+  /* Vertical: 5 columnas × 3 filas (módulos alargados), partidas por la mitad para colocar el
+     logo. Foto arriba; titular en medio; abajo, el resumen (en el color, que dobla), el logo
+     sobre negro y el QR sobre blanco. */
+  .vertical .noticia { grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(6, 1fr); }
+  .vertical .foto    { grid-area: 1 / 1 / 3 / 6; }
+  .vertical .titulo  { grid-area: 3 / 1 / 5 / 6; }
+  .vertical .resumen { grid-area: 5 / 1 / 6 / 4; }
+  .vertical .marca   { grid-area: 6 / 1 / 7 / 4; }
+  .vertical .pie     { grid-area: 5 / 4 / 7 / 6; }
+
+  /* Foto */
   .foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .foto figcaption {
     position: absolute; left: 0; right: 0; bottom: 0;
-    padding: calc(4 * var(--u)) calc(3 * var(--u)) calc(2 * var(--u)); font-size: calc(1.9 * var(--u)); color: #e8eef6;
+    padding: calc(4 * var(--u)) var(--margen) calc(1.8 * var(--u)); font-size: calc(1.8 * var(--u)); color: #fff;
     background: linear-gradient(transparent, rgba(0, 0, 0, .75));
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
-  .texto {
-    display: flex; flex-direction: column; padding: calc(4.5 * var(--u)) calc(6 * var(--u)) calc(9 * var(--u)); background: var(--panel);
-    height: 100vh; overflow: hidden;
+  /* Sin foto: el damero del escudo (positivo y negativo), en el color del centro y negro,
+     con módulos del tamaño de la retícula. */
+  .sin-foto .foto {
+    background: repeating-conic-gradient(#000 0 25%, var(--color) 0 50%) 0 0 / 100% 50%;
   }
-  /* Logo de la UPCT · ETSII (en blanco), arriba a la derecha del texto */
-  .marca { flex: none; display: flex; justify-content: flex-end; margin-bottom: calc(3.2 * var(--u)); }
-  /* Cada logo tiene su proporción (su width y height); si no cupiera, se reduce sin deformarse. */
+  .sin-foto.a-sangre .foto, .a-sangre .sin-foto .foto { background-size: calc(200% / 3) 40%; }
+  .vertical .sin-foto .foto { background-size: 40% 200%; }
+  .sin-foto .foto img, .sin-foto .foto figcaption { display: none; }
+
+  /* Logo del centro (en negativo, sobre negro). Alrededor, al menos medio alto del logo libre
+     (zona de protección del manual: el radio del escudo). */
+  .marca { display: flex; align-items: center; padding: 0 var(--margen); }
   .marca img {
     display: block; height: calc(6 * var(--u)); width: auto; max-width: 100%;
-    object-fit: contain; object-position: right center;
+    object-fit: contain; object-position: left center;
   }
-  .meta { display: flex; align-items: center; gap: calc(2.2 * var(--u)); font-size: calc(2.6 * var(--u)); color: var(--suave); }
-  .cat {
-    background: var(--acento); color: #1b1206; font-weight: 800;
-    text-transform: uppercase; letter-spacing: .08em;
-    padding: calc(.7 * var(--u)) calc(1.6 * var(--u)); border-radius: calc(.6 * var(--u)); font-size: calc(2.3 * var(--u));
+  .vertical .marca img { height: calc(5.6 * var(--u)); }
+
+  /* Titular */
+  .titulo { display: flex; flex-direction: column; padding: var(--margen); }
+  .meta {
+    flex: none; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: calc(1.6 * var(--u));
+    font-family: var(--titulares); font-weight: 500; font-size: calc(2.6 * var(--u)); line-height: 1.2;
   }
+  .cat { text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+  .cat::after { content: "·"; margin-left: calc(1.6 * var(--u)); font-weight: 500; }
   h1 {
-    margin-top: calc(3.5 * var(--u)); font-size: calc(6.2 * var(--u)); line-height: 1.12; font-weight: 800; flex: none;
-    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+    flex: none; margin-top: calc(2.4 * var(--u));
+    font-family: var(--titulares); font-weight: 500; font-size: calc(6.6 * var(--u)); line-height: 1.08;
+    letter-spacing: -.01em;
+    display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;
   }
-  .meta, .resumen, .pie { flex: none; }
-  .resumen {
-    margin-top: calc(3 * var(--u)); font-size: calc(3.1 * var(--u)); line-height: 1.38; color: var(--suave);
-    display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+
+  /* Resumen */
+  .resumen { padding: var(--margen); }
+  .resumen p {
+    font-size: calc(2.5 * var(--u)); line-height: 1.35;
+    display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;
   }
-  .pie { margin-top: auto; display: flex; align-items: center; gap: calc(3 * var(--u)); padding-top: calc(3 * var(--u)); }
-  .qr { background: #fff; padding: calc(1.2 * var(--u)); border-radius: calc(.8 * var(--u)); line-height: 0; flex: none; }
-  .qr img, .qr canvas { width: calc(18 * var(--u)) !important; height: calc(18 * var(--u)) !important; }
-  .fuente { font-size: calc(2.3 * var(--u)); line-height: 1.45; color: var(--suave); }
-  .fuente b { display: block; color: var(--texto); font-size: calc(2.9 * var(--u)); margin-bottom: calc(.6 * var(--u)); }
+  .vertical .resumen p { font-size: calc(2.9 * var(--u)); }
+
+  /* QR y fuente, sobre blanco */
+  .pie { display: flex; align-items: center; gap: calc(2.6 * var(--u)); padding: 0 var(--margen); }
+  .qr { flex: none; line-height: 0; }
+  .qr img, .qr canvas { width: calc(15 * var(--u)) !important; height: calc(15 * var(--u)) !important; }
+  .fuente { font-size: calc(1.9 * var(--u)); line-height: 1.4; }
+  .fuente b {
+    display: block; margin-bottom: calc(.8 * var(--u));
+    font-family: var(--titulares); font-weight: 500; font-size: calc(2.6 * var(--u)); line-height: 1.15;
+  }
+  .vertical .pie { flex-direction: column; justify-content: center; align-items: flex-start; padding: var(--margen); }
+  .vertical .qr img, .vertical .qr canvas { width: calc(26 * var(--u)) !important; height: calc(26 * var(--u)) !important; }
+  .vertical .fuente { font-size: calc(2.4 * var(--u)); }
+  .vertical .fuente b { font-size: calc(3.2 * var(--u)); }
+
+  /* Barra de progreso, al pie del bloque del titular, en el color del texto. */
   .progreso {
-    position: absolute; left: 50%; right: 0; bottom: 0; display: flex; align-items: center;
-    gap: calc(.6 * var(--u)); padding: 0 calc(6 * var(--u)) calc(3.5 * var(--u));
+    flex: none; margin-top: auto; padding-top: calc(2.4 * var(--u));
+    display: flex; align-items: center; gap: calc(.6 * var(--u));
   }
-  .contador {
-    flex: none; margin-left: calc(1.4 * var(--u)); font-size: calc(2.2 * var(--u)); line-height: 1; color: var(--suave);
-    font-variant-numeric: tabular-nums;
-  }
-  .progreso i { flex: 1; height: calc(.8 * var(--u)); background: var(--linea); border-radius: calc(.4 * var(--u)); overflow: hidden; }
-  .progreso b { display: block; height: 100%; width: 0; background: var(--acento); }
+  .progreso i { position: relative; flex: 1; height: calc(.6 * var(--u)); overflow: hidden; }
+  .progreso i::before { content: ""; position: absolute; inset: 0; background: var(--tinta); opacity: .3; }
+  .progreso b { position: relative; display: block; height: 100%; width: 0; background: var(--tinta); }
   .progreso .hecha b { width: 100%; }
   .progreso .pausa b { width: 45%; }
   .progreso .activa b { animation: llenar var(--duracion, 8s) linear forwards; }
   @keyframes llenar { from { width: 0; } to { width: 100%; } }
-  .texto, .foto img { transition: opacity .6s ease; }
-  .oculto .texto, .oculto .foto img { opacity: 0; }
+  .contador {
+    flex: none; margin-left: calc(1.2 * var(--u)); line-height: 1;
+    font-family: var(--titulares); font-weight: 500; font-size: calc(2.2 * var(--u));
+    font-variant-numeric: tabular-nums;
+  }
 
-  /* Diseño «foto»: foto a pantalla completa y el texto encima, abajo (fotos apaisadas) */
-  .foto-completa .noticia, .foto-completa .noticia.sin-foto { display: block; }
-  .foto-completa .foto { position: absolute; inset: 0; }
-  .foto-completa .foto figcaption { display: none; }
-  .foto-completa .texto {
-    position: absolute; inset: 0; height: auto; padding: calc(4.5 * var(--u)) calc(6 * var(--u)) calc(7.5 * var(--u));
-    background: linear-gradient(to bottom, rgba(8, 15, 26, .8) 0, rgba(8, 15, 26, .5) 11%,
-                rgba(8, 15, 26, 0) 24%, rgba(8, 15, 26, 0) 40%, rgba(8, 15, 26, .9) 66%,
-                rgba(8, 15, 26, .96) 100%);
-    display: grid; grid-template-columns: 1fr auto; column-gap: calc(6 * var(--u));
-    grid-template-rows: auto 1fr auto auto auto;
-  }
-  .foto-completa .sin-foto .texto { background: var(--panel); }
-  .foto-completa .marca { grid-column: 1 / -1; grid-row: 1; }
-  .foto-completa .marca img { filter: drop-shadow(0 0 calc(.8 * var(--u)) rgba(0, 0, 0, .55)); }
-  .foto-completa .meta { grid-column: 1; grid-row: 3; }
-  .foto-completa h1 {
-    grid-column: 1; grid-row: 4; margin-top: calc(2 * var(--u)); font-size: calc(5.6 * var(--u)); -webkit-line-clamp: 3;
-    text-shadow: 0 calc(.2 * var(--u)) calc(1 * var(--u)) rgba(0, 0, 0, .5);
-  }
-  .foto-completa .resumen {
-    grid-column: 1; grid-row: 5; margin-top: calc(2.2 * var(--u)); font-size: calc(2.9 * var(--u)); color: #dbe4f0;
-    -webkit-line-clamp: 2;
-  }
-  .foto-completa .pie {
-    /* Abarca también la fila elástica: si no, su altura estira la del resumen. */
-    grid-column: 2; grid-row: 2 / 6; align-self: end; margin: 0; padding: 0;
-    flex-direction: column; gap: calc(1.8 * var(--u)); text-align: center;
-  }
-  .foto-completa .fuente { color: #dbe4f0; }
-  .foto-completa .progreso { left: 0 !important; padding-bottom: calc(3 * var(--u)); }
+  /* Fundido entre noticias: cambia el contenido; los bloques de color se quedan. */
+  .cambia { transition: opacity .6s ease; }
+  .oculto .cambia { opacity: 0; }
 
+  /* Sin noticias: el logo sobre negro. */
   .vacio { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
-  .vacio p { font-size: calc(5 * var(--u)); font-weight: 800; }
-  .vacio img { display: block; width: min(calc(.76 * var(--ancho)), calc(135 * var(--u))); height: auto; margin: 0 auto; }
-  .vacio small { display: block; margin-top: calc(4 * var(--u)); font-size: calc(3.2 * var(--u)); color: var(--suave); font-weight: 400; }
-
-  /* Pantalla vertical: foto arriba, a todo el ancho y sin recortar (3:2); el texto debajo. */
-  .vertical .noticia, .vertical .noticia.sin-foto { display: flex; flex-direction: column; }
-  .vertical .foto { flex: none; width: 100%; aspect-ratio: 3 / 2; }
-  .vertical .texto {
-    flex: 1; height: auto; min-height: 0;
-    padding: calc(4.5 * var(--u)) calc(6 * var(--u)) calc(10 * var(--u));
+  .vacio img { display: block; width: min(calc(.7 * var(--ancho)), calc(125 * var(--u))); height: auto; margin: 0 auto; }
+  .vacio small {
+    display: block; margin-top: calc(4 * var(--u));
+    font-family: var(--titulares); font-weight: 500; font-size: calc(3.2 * var(--u));
   }
-  .vertical h1 { -webkit-line-clamp: 5; }
-  .vertical .resumen { font-size: calc(3.6 * var(--u)); -webkit-line-clamp: 8; }
-  .vertical .meta { font-size: calc(3 * var(--u)); }
-  .vertical .marca img { height: calc(5.5 * var(--u)); }
-  .vertical .qr img, .vertical .qr canvas { width: calc(22 * var(--u)) !important; height: calc(22 * var(--u)) !important; }
-  .vertical .fuente { font-size: calc(2.8 * var(--u)); }
-  .vertical .fuente b { font-size: calc(3.4 * var(--u)); }
-  .vertical .progreso { left: 0 !important; padding: 0 calc(6 * var(--u)) calc(5 * var(--u)); }
-  .vertical .progreso i { height: calc(1 * var(--u)); }
-  .vertical .contador { font-size: calc(2.8 * var(--u)); }
 </style>
 </head>
 <body>
@@ -217,8 +246,7 @@ const CLAVE_CACHE = UPCT ? "noticias_upct" : "noticias_sinc";
 // Valores por defecto, con las dos fuentes: 20 noticias de 12 s, 245 s (20 × 12 y 5 de carga).
 const SEGUNDOS_DEFECTO = 12;
 const DURACION_DEFECTO = 245;
-// Diseño: foto a pantalla completa (por defecto en la UPCT, con fotos apaisadas de actos) o a
-// media pantalla (por defecto en SINC).
+// Diseño: foto entera junto a la columna del titular (por defecto) o foto a sangre (diseno=foto).
 const DISENO = (params.get("diseno") || "").trim().toLowerCase();
 // Pantalla vertical: sola si la ventana es vertical; con vertical=1 en una ventana horizontal
 // (monitor girado sin girar la imagen), la página se gira 90° (a la izquierda con «izquierda»).
@@ -231,9 +259,9 @@ if (VERTICAL && !VENTANA_VERTICAL) {
   document.documentElement.classList.add("girar");
   if (PARAM_VERTICAL === "izquierda") document.documentElement.classList.add("izquierda");
 }
-// En vertical no se usa la foto a pantalla completa: recortaría casi dos tercios de cada foto.
-const FOTO_COMPLETA = !VERTICAL && (DISENO === "foto" || (UPCT && DISENO !== "mitad"));
-if (FOTO_COMPLETA) document.documentElement.classList.add("foto-completa");
+// En vertical no hay foto a sangre: recortaría casi dos tercios de cada foto.
+const A_SANGRE = !VERTICAL && DISENO === "foto";
+if (A_SANGRE) document.documentElement.classList.add("a-sangre");
 if (UPCT) document.title = "Noticias de la UPCT";
 const textoCategorias = (params.get("categorias") || "").trim();
 const CATEGORIAS = !textoCategorias || textoCategorias.toLowerCase() === "todas" ? []
@@ -252,28 +280,30 @@ const BUCLE = params.get("bucle") === "1";
 const INICIO = parseInt(params.get("inicio") || "0", 10) || 0;
 
 const raiz = document.getElementById("raiz");
-// Centro (escuela=siglas o un nombre corto; por defecto, la ETSII): cambia el logo. Logos de la
-// identidad corporativa de la UPCT, en negativo y sin fondo, en recursos/logos/<clave>.svg.
+// Centro (escuela=siglas o un nombre corto; por defecto, la ETSII): cambia el logo y el color.
+// Logos de la identidad corporativa de la UPCT, en negativo y sin fondo, en
+// recursos/logos/<clave>.svg. Color de cada centro y del texto encima (blanco o negro), los del
+// Manual de Identidad de la UPCT (2026), pp. 54-55.
 const ESCUELAS = {
-  etsii:     { corto: "ETSII", alias: ["industriales", "industrial"],
+  etsii:     { corto: "ETSII", alias: ["industriales", "industrial"], color: "#9b0000", tinta: "#fff",
                nombre: "Escuela Técnica Superior de Ingeniería Industrial" },
-  etsit:     { corto: "ETSIT", alias: ["teleco", "telecomunicacion"],
+  etsit:     { corto: "ETSIT", alias: ["teleco", "telecomunicacion"], color: "#0096d7", tinta: "#fff",
                nombre: "Escuela Técnica Superior de Ingeniería de Telecomunicación" },
-  etsia:     { corto: "ETSIA", alias: ["agronomos", "agronomica"],
+  etsia:     { corto: "ETSIA", alias: ["agronomos", "agronomica"], color: "#00c864", tinta: "#000",
                nombre: "Escuela Técnica Superior de Ingeniería Agronómica" },
-  etsae:     { corto: "ETSAE", alias: ["arquitectura", "edificacion"],
+  etsae:     { corto: "ETSAE", alias: ["arquitectura", "edificacion"], color: "#afa5a5", tinta: "#000",
                nombre: "Escuela Técnica Superior de Arquitectura y Edificación" },
-  etsino:    { corto: "ETSINO", alias: ["naval"],
+  etsino:    { corto: "ETSINO", alias: ["naval"], color: "#00a08c", tinta: "#fff",
                nombre: "Escuela Técnica Superior de Ingeniería Naval y Oceánica" },
-  eicm:      { corto: "EICM", alias: ["caminos", "minas"],
+  eicm:      { corto: "EICM", alias: ["caminos", "minas"], color: "#004b82", tinta: "#fff",
                nombre: "Escuela Técnica Superior de Ingeniería de Caminos, Canales y Puertos y de Ingeniería de Minas" },
-  fce:       { corto: "Facultad de Ciencias de la Empresa", alias: ["empresa"],
+  fce:       { corto: "Facultad de Ciencias de la Empresa", alias: ["empresa"], color: "#ff4b00", tinta: "#fff",
                nombre: "Facultad de Ciencias de la Empresa" },
-  cud:       { corto: "Centro Universitario de la Defensa", alias: ["defensa"],
+  cud:       { corto: "Centro Universitario de la Defensa", alias: ["defensa"], color: "#5a5ab4", tinta: "#fff",
                nombre: "Centro Universitario de la Defensa · Academia General del Aire" },
-  doctorado: { corto: "Escuela Internacional de Doctorado", alias: ["eindoc"],
+  doctorado: { corto: "Escuela Internacional de Doctorado", alias: ["eindoc"], color: "#ffc814", tinta: "#000",
                nombre: "Escuela Internacional de Doctorado" },
-  formacion: { corto: "Escuela de Formación Continua", alias: ["formacion-continua"],
+  formacion: { corto: "Escuela de Formación Continua", alias: ["formacion-continua"], color: "#ff972c", tinta: "#000",
                nombre: "Escuela de Formación Continua" },
 };
 const escuelaPedida = (params.get("escuela") || "").trim().normalize("NFD")
@@ -281,6 +311,8 @@ const escuelaPedida = (params.get("escuela") || "").trim().normalize("NFD")
 const CLAVE_ESCUELA = Object.keys(ESCUELAS).find(k => k === escuelaPedida ||
   ESCUELAS[k].alias.includes(escuelaPedida)) || "etsii";
 const ESCUELA = ESCUELAS[CLAVE_ESCUELA];
+document.documentElement.style.setProperty("--color", ESCUELA.color);
+document.documentElement.style.setProperty("--tinta", ESCUELA.tinta);
 const LOGO = "recursos/logos/" + CLAVE_ESCUELA + ".svg";
 // Texto en lugar del logo, si no se puede cargar.
 const NOMBRE_CENTRO = ESCUELA.corto + " · Universidad Politécnica de Cartagena";
@@ -292,7 +324,7 @@ function textoPlano(s) {
   return new DOMParser().parseFromString(s || "", "text/html").body.textContent.replace(/\s+/g, " ").trim();
 }
 const aHttps = u => (u || "").replace(/^http:\/\//i, "https://");
-const normalizar = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const normalizar = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
 function crear(etiqueta, clase, texto) {
   const e = document.createElement(etiqueta);
@@ -407,51 +439,56 @@ async function cargarFoto(url) {
 
 function ponerQr(contenedor, texto) {
   if (typeof QRCode === "undefined" || !texto) return;
-  const caja = crear("div", "qr");
+  const caja = crear("div", "qr cambia");
   contenedor.prepend(caja);
-  new QRCode(caja, { text: texto, width: 256, height: 256, colorDark: "#0e1a2b", colorLight: "#ffffff",
+  new QRCode(caja, { text: texto, width: 256, height: 256, colorDark: "#000000", colorLight: "#ffffff",
                      correctLevel: QRCode.CorrectLevel.M });
 }
 
-// Que todo quepa en la pantalla: primero se reduce la letra del titular (hasta que entre
-// en 4 líneas; 3 con la foto completa) y después se quitan líneas al resumen.
-// (en vertical, 5 líneas). Los tamaños van en la unidad --u (vh en horizontal, vw en vertical).
-const AJUSTE = VERTICAL ? { tam: 7.2, min: 5.4, lineas: 5, resumen: 8 }
-             : FOTO_COMPLETA ? { tam: 5.6, min: 4.4, lineas: 3, resumen: 2 }
-             : { tam: 6.2, min: 4.7, lineas: 4, resumen: 5 };
-function ajustar(texto, titular, resumen) {
-  titular.style.fontSize = "";
-  resumen.style.webkitLineClamp = "";
-  // El titular se mide sin recortar (en bloque) y se vuelve a recortar al final, por si acaso.
-  titular.style.display = "block";
-  titular.style.webkitLineClamp = "none";
-  // offsetHeight y no getBoundingClientRect: con la página girada, este daría el ancho.
-  const lineas = () => titular.offsetHeight /
-                       (parseFloat(getComputedStyle(titular).fontSize) * 1.12);
-  for (let tam = AJUSTE.tam; lineas() > AJUSTE.lineas + 0.2 && tam > AJUSTE.min; ) {
-    tam -= 0.3;
+// Que todo quepa en su bloque: primero se reduce la letra del titular hasta que el bloque no se
+// desborde (y, si aun así no cabe, se recorta a las líneas que quepan); el resumen, a las
+// líneas que quepan en el suyo. Los tamaños van en la unidad --u (vh en horizontal, vw en vertical).
+const AJUSTE = VERTICAL ? { tam: 8.4, min: 4.6 }
+             : A_SANGRE ? { tam: 6.4, min: 4.2 }
+             : { tam: 6.6, min: 4 };
+// scrollHeight y clientHeight, y no getBoundingClientRect: con la página girada, este daría el ancho.
+const desborda = b => b.scrollHeight > b.clientHeight + 1;
+function ajustar(bloqueTitulo, titular, bloqueResumen, resumen) {
+  titular.style.fontSize = "calc(" + AJUSTE.tam + " * var(--u))";
+  titular.style.webkitLineClamp = "";
+  // También si una palabra larga («telecomunicaciones») no cabe a lo ancho.
+  const ancho = () => titular.scrollWidth > titular.clientWidth + 1;
+  for (let tam = AJUSTE.tam; (desborda(bloqueTitulo) || ancho()) && tam > AJUSTE.min; ) {
+    tam -= 0.2;
     titular.style.fontSize = "calc(" + tam.toFixed(1) + " * var(--u))";
   }
-  titular.style.display = "";
-  titular.style.webkitLineClamp = "";
-  for (let n = AJUSTE.resumen; texto.scrollHeight > texto.clientHeight + 2 && n > 1; ) {
-    n -= 1;
-    resumen.style.webkitLineClamp = String(n);
+  if (desborda(bloqueTitulo)) {
+    const alto = parseFloat(getComputedStyle(titular).lineHeight);
+    const sobra = bloqueTitulo.scrollHeight - bloqueTitulo.clientHeight;
+    titular.style.webkitLineClamp = String(Math.max(1, Math.floor((titular.offsetHeight - sobra) / alto)));
   }
+  const estilo = getComputedStyle(bloqueResumen);
+  const util = bloqueResumen.clientHeight - parseFloat(estilo.paddingTop) - parseFloat(estilo.paddingBottom);
+  const lineas = Math.floor(util / parseFloat(getComputedStyle(resumen).lineHeight));
+  resumen.style.webkitLineClamp = String(Math.max(1, lineas));
+  resumen.hidden = lineas < 1;
 }
 
 async function mostrarNoticias(noticias) {
   const marco = crear("div", "noticia oculto");
-  const figura = crear("figure", "foto");
-  const img = crear("img");
+  // Foto
+  const figura = crear("figure", "bloque foto");
+  const img = crear("img", "cambia");
   img.alt = "";
-  const pieFoto = crear("figcaption");
+  const pieFoto = crear("figcaption", "cambia");
   figura.append(img, pieFoto);
-  const texto = crear("section", "texto");
-  marco.append(figura, texto);
-  // El logo es el mismo elemento en todas las noticias (no se vuelve a cargar).
-  const marca = crear("div", "marca");
-  marca.append(crearLogo(() => { marca.style.display = "none"; }));
+  // Logo (el mismo elemento en todas las noticias: no se vuelve a cargar)
+  const marca = crear("div", "bloque marca");
+  marca.append(crearLogo(() => { marca.replaceChildren(); }));
+  // Titular, con la barra de progreso al pie
+  const bloqueTitulo = crear("section", "bloque titulo");
+  const meta = crear("div", "meta cambia");
+  const titular = crear("h1", "cambia");
   // Barra de progreso: un segmento por noticia o, si son muchas, una barra y un contador.
   const progreso = crear("div", "progreso");
   progreso.style.setProperty("--duracion", SEGUNDOS + "s");
@@ -464,7 +501,15 @@ async function mostrarNoticias(noticias) {
   });
   const contador = segmentos ? null : crear("span", "contador");
   if (contador) progreso.append(contador);
-  raiz.append(marco, progreso);
+  bloqueTitulo.append(meta, titular, progreso);
+  // Resumen
+  const bloqueResumen = crear("div", "bloque resumen");
+  const resumen = crear("p", "cambia");
+  bloqueResumen.append(resumen);
+  // QR y fuente
+  const pie = crear("div", "bloque pie");
+  marco.append(figura, marca, bloqueTitulo, bloqueResumen, pie);
+  raiz.append(marco);
 
   // Las fotos se cargan de una en una: la de la noticia actual y, mientras se ve, la siguiente.
   const fotos = [];
@@ -477,16 +522,16 @@ async function mostrarNoticias(noticias) {
     const url = await foto(i);
     if (noticias.length > 1) foto(siguiente(i));
     marco.classList.toggle("sin-foto", !url);
-    progreso.style.left = url ? "50%" : "0";
     if (url) img.src = url; else img.removeAttribute("src");
     pieFoto.textContent = n.pieFoto;
     pieFoto.hidden = !n.pieFoto;
 
-    const meta = crear("div", "meta");
+    meta.replaceChildren();
     if (n.categoria) meta.append(crear("span", "cat", n.categoria));
     if (!isNaN(n.fecha)) meta.append(crear("span", "fecha", fechaLarga.format(n.fecha)));
-    const pie = crear("div", "pie");
-    const fuente = crear("div", "fuente");
+    titular.textContent = n.titulo;
+    resumen.textContent = n.resumen;
+    const fuente = crear("div", "fuente cambia");
     fuente.append(crear("b", null, "Lee la noticia completa"));
     if (UPCT) {
       fuente.append(document.createTextNode("Noticias de la UPCT"));
@@ -494,12 +539,9 @@ async function mostrarNoticias(noticias) {
       fuente.append(document.createTextNode("Agencia SINC" + (n.autor && n.autor !== "SINC" ? " · " + n.autor : "")),
                     crear("br"), document.createTextNode("Licencia CC BY 4.0"));
     }
-    pie.append(fuente);
+    pie.replaceChildren(fuente);
     ponerQr(pie, n.enlace);
-    const titular = crear("h1", null, n.titulo);
-    const resumen = crear("p", "resumen", n.resumen);
-    texto.replaceChildren(marca, meta, titular, resumen, pie);
-    ajustar(texto, titular, resumen);
+    ajustar(bloqueTitulo, titular, bloqueResumen, resumen);
 
     const actual = PAUSA ? "pausa" : "activa";
     if (segmentos) {
@@ -515,10 +557,7 @@ async function mostrarNoticias(noticias) {
   }
 
   // Si cambia el tamaño de la ventana (otra resolución), se vuelve a ajustar el texto.
-  window.addEventListener("resize", () => {
-    const titular = texto.querySelector("h1"), resumen = texto.querySelector(".resumen");
-    if (titular && resumen) ajustar(texto, titular, resumen);
-  });
+  window.addEventListener("resize", () => ajustar(bloqueTitulo, titular, bloqueResumen, resumen));
 
   await mostrar();
   if (PAUSA || noticias.length < 2) return;
@@ -549,10 +588,10 @@ function sinNoticias() {
 
 (async () => {
   const noticias = elegir(await (UPCT ? leerUpct() : leerRss()));
-  // Medir con la letra definitiva (Inter), no con la de reserva.
+  // Medir con las letras definitivas (Funnel Sans e Inter), no con las de reserva.
   try {
     await Promise.race([
-      Promise.all(["400 30px Inter", "800 60px Inter"].map(f => document.fonts.load(f))),
+      Promise.all(["500 60px 'Funnel Sans'", "400 30px Inter"].map(f => document.fonts.load(f))),
       new Promise(ok => setTimeout(ok, 3000)),
     ]);
   } catch (e) {}

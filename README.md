@@ -8,15 +8,20 @@ tipo web, a 1920×1080 o cualquier resolución 16:9). La usa la ETSII de la UPCT
 
 ## Qué muestra
 - **SINC** (por defecto): las **20 últimas noticias** de todas las secciones, **12 s cada una**
-  (4 minutos), con la foto a media pantalla.
-- **UPCT** (`?fuente=upct`): también las **20 últimas noticias**, **12 s cada una**, con la
-  foto a pantalla completa y el texto encima (las fotos de la UPCT son apaisadas, de actos con
-  gente, y a media pantalla se recortarían).
-- **Pantalla vertical** (`?vertical=1`), con las dos fuentes: la foto arriba, a todo el ancho y
-  sin recortar, y el texto debajo. Si la Raspberry gira la imagen, la página lo detecta sola; si
-  solo se ha girado el monitor, la página se gira ella misma.
-- En cada noticia: el **logo del centro** (arriba a la derecha; por defecto, la ETSII; cualquier
-  otro centro de la UPCT con `?escuela=`), la foto, la fecha, el
+  (4 minutos).
+- **UPCT** (`?fuente=upct`): también las **20 últimas noticias**, **12 s cada una**.
+- **Diseño** según el Manual de Identidad Corporativa de la UPCT (2026),
+  «Sistema visual» (pp. 61-64): una retícula de 3 columnas y 5 filas en la que la foto, el
+  texto y manchas de color (el del centro, blanco y negro) ocupan módulos enteros. Por defecto,
+  la foto entera (3:2, sin recortar) en 2 × 4 módulos, con el titular en una columna del color
+  del centro; con `?diseno=foto`, la foto a sangre y el titular en un bloque abajo. Titular,
+  fechas y avisos en **Funnel Sans** Medium (la letra de la UPCT para comunicación); el texto
+  corrido en Inter (el manual pide Helvetica Now Text, que es de pago).
+- **Pantalla vertical** (`?vertical=1`), con las dos fuentes: retícula de 5 × 3, con la foto
+  arriba, el titular en medio y el resto abajo. Si la Raspberry gira la imagen, la página lo
+  detecta sola; si solo se ha girado el monitor, la página se gira ella misma.
+- En cada noticia: el **logo del centro** sobre negro (por defecto, la ETSII; cualquier otro
+  centro de la UPCT con `?escuela=`, que cambia también el color), la foto, la fecha, el
   titular, el resumen y un **QR** a la noticia completa, con la fuente. En SINC, además, la
   sección, el pie de foto, el autor y la licencia.
 - Un fundido entre noticias, una barra de progreso y un contador («4 / 25»). Todo se puede
@@ -38,8 +43,8 @@ tipo web, a 1920×1080 o cualquier resolución 16:9). La usa la ETSII de la UPCT
   hay noticias nuevas. Si no encuentra ninguna (por ejemplo, porque la UPCT ha cambiado su web),
   no toca los datos y la tarea falla: GitHub avisa por correo. Se puede lanzar a mano en la
   pestaña **Actions** del repositorio («Noticias de la UPCT» → «Run workflow»).
-- La letra (Inter), el generador de QR y los logos van en `recursos/`: la pantalla solo necesita
-  llegar a esta página, a `agenciasinc.es` y a `www.upct.es` (fotos).
+- Las letras (Funnel Sans e Inter), el generador de QR y los logos van en `recursos/`: la
+  pantalla solo necesita llegar a esta página, a `agenciasinc.es` y a `www.upct.es` (fotos).
 - Para probarla en un ordenador: SINC, abriendo `index.html` como fichero (`file:///…`), porque
   SINC responde a `localhost` y `127.0.0.1` con una cabecera CORS doble que el navegador rechaza
   (desde GitHub Pages no pasa); la UPCT, con un servidor local (`python -m http.server`), porque
@@ -82,14 +87,14 @@ Anthias vuelve a cargar la página cada vez que la muestra.
 | Parámetro | Por defecto | Uso |
 |---|---|---|
 | `fuente` | SINC | `upct`: noticias de la UPCT |
-| `diseno` | `mitad` en SINC, `foto` en la UPCT | `foto`: foto a pantalla completa con el texto encima; `mitad`: foto a media pantalla |
+| `diseno` | `mitad` | `foto`: foto a sangre (a pantalla completa), con el titular en un bloque de 2 × 2 módulos abajo; `mitad`: foto entera, sin recortar, junto a la columna del titular |
 | `categorias` | todas | Solo SINC. Secciones separadas por comas: `Ciencia`, `Tecnología`, `Innova`, `Tierra`, `Salud`, `Sociedad` (da igual con o sin tildes y mayúsculas); `todas` para no filtrar |
 | `segundos` | `12` | Segundos por noticia (mínimo 4) |
 | `duracion` | `245` (20 noticias) | Duración total en segundos, **la misma que se pone en Anthias**: la página calcula cuántas noticias caben, dejando 5 s para la carga; si no hay bastantes, vuelve a empezar. Manda sobre `n` |
 | `n` | — | En vez de la duración, el número de noticias (1 a 60); al acabar se queda en la última |
 | `bucle` | — | `1`: vuelve a empezar al acabar (para verla en un navegador) |
-| `vertical` | según la ventana | `1`: pantalla vertical (foto arriba y texto debajo, con las dos fuentes; no admite `diseno=foto`). Si la ventana ya es vertical, se usa sola, sin el parámetro. Si es horizontal (solo se ha girado el monitor), la página se gira 90° a la derecha; `izquierda`, hacia el otro lado (si el texto sale boca abajo); `0`, siempre horizontal |
-| `escuela` | `etsii` | Logo del centro. Siglas o un nombre corto (da igual con o sin tildes y mayúsculas): `etsii` o `industriales`; `etsit` o `teleco`; `etsia` o `agronomos`; `etsae` o `arquitectura`; `etsino` o `naval`; `eicm` o `caminos`; `fce` o `empresa`; `cud` o `defensa`; `doctorado`; `formacion`. Si no se reconoce, la ETSII |
+| `vertical` | según la ventana | `1`: pantalla vertical (retícula de 5 × 3: foto arriba, titular en medio y el resto abajo; con las dos fuentes; no admite `diseno=foto`). Si la ventana ya es vertical, se usa sola, sin el parámetro. Si es horizontal (solo se ha girado el monitor), la página se gira 90° a la derecha; `izquierda`, hacia el otro lado (si el texto sale boca abajo); `0`, siempre horizontal |
+| `escuela` | `etsii` | Logo y color del centro (los del manual de identidad). Siglas o un nombre corto (da igual con o sin tildes y mayúsculas): `etsii` o `industriales`; `etsit` o `teleco`; `etsia` o `agronomos`; `etsae` o `arquitectura`; `etsino` o `naval`; `eicm` o `caminos`; `fce` o `empresa`; `cud` o `defensa`; `doctorado`; `formacion`. Si no se reconoce, la ETSII |
 | `pausa`, `inicio` | — | `pausa=1` no pasa de noticia; `inicio=k` empieza en la k-ésima (para capturas) |
 
 Con más de 8 noticias, la barra de progreso es solo la de la noticia actual, con un contador
@@ -127,4 +132,6 @@ satura la Raspberry.
   identidad corporativa (versión para fondo negro, sin el fondo y recortada); no están bajo
   ninguna licencia libre.
 - **Letra Inter**: SIL Open Font License 1.1 (`recursos/OFL-Inter.txt`).
+- **Letra Funnel Sans** (The Funnel Project Authors, de Google Fonts): SIL Open Font License 1.1
+  (`recursos/OFL-FunnelSans.txt`).
 - **qrcodejs** (davidshimjs): licencia MIT (`recursos/LICENSE-qrcodejs.txt`).
