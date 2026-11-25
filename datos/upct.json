@@ -1,7 +1,34 @@
 {
  "fuente": "https://www.upct.es/destacados/noticias.php?ubicacion=general&op=2",
- "actualizado": "2026-11-25T00:50:13+00:00",
+ "actualizado": "2026-11-25T15:43:02+00:00",
  "noticias": [
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-25-la-upct-premia-la-creatividad-que-conciencia-contra-la-violencia-de-genero-a-traves-de-las-palabras-las-imagenes-y-el-audio",
+   "titulo": "La UPCT premia la creatividad que conciencia contra la violencia de género a través de las palabras, las imágenes y el audio",
+   "fecha": "2026-11-25",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18615composicion.png",
+   "pieFoto": "Composición con las tres fotografías premiadas.",
+   "resumen": "Hoy, 25N, se han dado a conocer los ganadores de los concursos de fotografía, microrrelatos y podcast",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18615composicion.png"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-25-la-comunidad-universitaria-muestra-su-compromiso-contra-la-violencia-de-genero-por-el-25n",
+   "titulo": "La comunidad universitaria muestra su compromiso contra la Violencia de Género por el 25N",
+   "fecha": "2026-11-25",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18614composicion.png",
+   "pieFoto": "Fotografías de la lectura del manifiesto en los tres campus y el Rectorado.",
+   "resumen": "El manifiesto de CRUE se ha leído simultáneamente en los tres campus y en el Rectorado",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18614composicion.png"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-25-estudiantes-de-ingenieria-de-recursos-minerales-visitan-una-cantera-de-yesos-en-almeria",
+   "titulo": "Estudiantes de Ingeniería de Recursos Minerales visitan una cantera de yesos en Almería",
+   "fecha": "2026-11-25",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18612WhatsApp%20Image%202026-11-24%20at%2017.52.23%20%284%29.jpeg",
+   "pieFoto": "Los estudiantes en el frente de explotación de la cantera 'Marylen', antes de presenciar una voladura controlada.",
+   "resumen": "Estudiantes de distintos cursos del grado en Recursos Minerales y Energía realizaron ayer una visita técnica a la cantera de yesos «Marylen», operada por el Grupo Torralba en el término municipal de Sorbas (Almería), con motivo de las actividades organizadas esta semana por Santa Bárbara, patrona de la minería.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18612WhatsApp%20Image%202026-11-24%20at%2017.52.23%20%284%29.jpeg"
+  },
   {
    "enlace": "https://www.upct.es/noticias/2026-11-24-la-politecnica-de-riga-acoge-la-semana-de-revision-anual-de-eut",
    "titulo": "La politécnica de Riga acoge la Semana de Revisión Anual de EUt+",
@@ -154,15 +181,6 @@
    "pieFoto": "El alumno, junto al vicedecano del COITIRM y profesores de Expresión Gráfica que le entregaron sus premios.",
    "resumen": "El área de Expresión Gráfica en la Ingeniería de la UPCT y el Colegio de Ingenieros Técnicos Industriales de la Región de Murcia (COITIRM) entregaron este jueves los premios concedidos al estudiante galardonado en la V Olimpiada de Dibujo Técnico 'Memorial Agustín Diéguez' que se ha matriculado en la Universidad Politécnica de Cartagena.",
    "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_185968T7A6619.JPG"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-20-premios-amc-global-al-talento-y-la-excelencia-academica-de-estudiantes-de-la-upct",
-   "titulo": "Premios AMC Global al talento y la excelencia académica de estudiantes de la UPCT",
-   "fecha": "2026-11-19",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18595WhatsApp%20Image%202026-11-19%20at%2011.40.28.jpeg",
-   "pieFoto": "Los premiados, recogiendo su galardón en las instalaciones de AMC Global.",
-   "resumen": "Los estudiantes Youssef Chelh Etaibi y Enrique Morales Bermejo han sido distinguidos hoy en los primeros galardones de la Cátedra AMC Global-UPCT de Smart Manufacturing & Data Science. Los premios reconocen a los mejores trabajos de fin de grado y fin de máster vinculados a las áreas de la Cátedra, con aplicaciones en la digitalización, la automatización y la eficiencia de la industria alimentaria.",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18595WhatsApp%20Image%202026-11-19%20at%2011.40.28.jpeg"
   }
  ]
 }
