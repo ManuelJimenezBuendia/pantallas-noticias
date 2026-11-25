@@ -37,11 +37,14 @@ tipo web, a 1920×1080 o cualquier resolución 16:9). La usa la ETSII de la UPCT
 - **UPCT**: la web de la UPCT no tiene RSS ni deja leerla desde otra web. Una **tarea
   programada de GitHub** ([`.github/workflows/upct.yml`](.github/workflows/upct.yml)) ejecuta
   [`scripts/upct.py`](scripts/upct.py) cada hora, de 7 a 21 h: lee el listado de noticias de
-  actualidad y, de cada noticia nueva, su resumen y su foto mediana (1200×800). En
+  actualidad y, de cada noticia nueva, su resumen y su foto mediana (1200×800). De las que ya
+  tenía actualiza el titular, la fecha y el pie de foto con los del listado (y, si ha cambiado la
+  foto, vuelve a leer la noticia). En
   [`datos/upct.json`](datos/upct.json), que es lo que lee la página, guarda las 20 más recientes:
   las del listado (unas 13) y, detrás, las que ya tenía y han salido de él. Solo hace un commit cuando
-  hay noticias nuevas. Si no encuentra ninguna (por ejemplo, porque la UPCT ha cambiado su web),
-  no toca los datos y la tarea falla: GitHub avisa por correo. Se puede lanzar a mano en la
+  algo ha cambiado. Si no encuentra ninguna noticia, o fallan todas las páginas de noticia que pide
+  (por ejemplo, porque la UPCT ha cambiado su web), no toca los datos y la tarea falla: GitHub avisa
+  por correo. Se puede lanzar a mano en la
   pestaña **Actions** del repositorio («Noticias de la UPCT» → «Run workflow»).
 - Las letras (Funnel Sans e Inter), el generador de QR y los logos van en `recursos/`: la
   pantalla solo necesita llegar a esta página, a `agenciasinc.es` y a `www.upct.es` (fotos).
