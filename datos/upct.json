@@ -1,6 +1,6 @@
 {
  "fuente": "https://www.upct.es/destacados/noticias.php?ubicacion=general&op=2",
- "actualizado": "2026-11-24T15:57:29+00:00",
+ "actualizado": "2026-11-25T00:50:13+00:00",
  "noticias": [
   {
    "enlace": "https://www.upct.es/noticias/2026-11-24-la-politecnica-de-riga-acoge-la-semana-de-revision-anual-de-eut",
@@ -75,15 +75,6 @@
    "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_186048T7A9506.JPG"
   },
   {
-   "enlace": "https://www.upct.es/noticias/2026-11-23-la-catedra-de-mecanicas-bolea-convoca-beca-para-analizar-el-fallo-de-una-maquina-industrial",
-   "titulo": "La cátedra de Mecánicas Bolea convoca beca para analizar el fallo de una máquina industrial",
-   "fecha": "2026-11-23",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_186035937_mecanicas-bolea.jpg",
-   "pieFoto": "Fotografía de la web de Mecánicas Bolea del transporte de una máquina industrial.",
-   "resumen": "El plazo de solicitud finaliza este miércoles",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_186035937_mecanicas-bolea.jpg"
-  },
-  {
    "enlace": "https://www.upct.es/noticias/2026-11-19-1800-euros-en-premios-a-los-mejores-trabajos-fin-de-estudios-sobre-energias-renovables",
    "titulo": "1.800 euros en premios a los mejores Trabajos Fin de Estudios sobre energías renovables",
    "fecha": "2026-11-23",
@@ -127,6 +118,15 @@
    "pieFoto": "Estudiantes de la UPCT, visitando las instalaciones de AMC Global en Murcia.",
    "resumen": "La cátedra de AMC Global en la UPCT ha convocado tres nuevas becas de iniciación a la investigación y el desarrollo tecnológico asociadas a actividades de I+D+i en un entorno industrial.",
    "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18599WhatsApp%20Image%202026-11-19%20at%2013.47.43%20%2812%29.jpeg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-23-la-catedra-de-mecanicas-bolea-convoca-beca-para-analizar-el-fallo-de-una-maquina-industrial",
+   "titulo": "La cátedra de Mecánicas Bolea convoca beca para analizar el fallo de una máquina industrial",
+   "fecha": "2026-11-23",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_186035937_mecanicas-bolea.jpg",
+   "pieFoto": "Fotografía de la web de Mecánicas Bolea del transporte de una máquina industrial.",
+   "resumen": "El plazo de solicitud finaliza este miércoles",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_186035937_mecanicas-bolea.jpg"
   },
   {
    "enlace": "https://www.upct.es/noticias/2026-11-20-el-rotary-club-de-cartagena-y-la-upct-promueven-el-voluntariado-intergeneracional-en-residencias",
