@@ -1,6 +1,6 @@
 {
  "fuente": "https://www.upct.es/destacados/noticias.php?ubicacion=general&op=2",
- "actualizado": "2026-11-25T16:56:12+00:00",
+ "actualizado": "2026-11-26T00:29:19+00:00",
  "noticias": [
   {
    "enlace": "https://www.upct.es/noticias/2026-11-25-la-upct-premia-la-creatividad-que-conciencia-contra-la-violencia-de-genero-a-traves-de-las-palabras-las-imagenes-y-el-audio",
@@ -55,15 +55,6 @@
    "pieFoto": "Fotografía de grupo de los premiados, sus directores y quienes les han entregado las distinciones.",
    "resumen": "Han sido distinguidos Ana Abenza Alonso, Jorge Aguirre Escarabajal, Luis Marqués Domingo, Guillermo Martínez Pérez y Fernando González del Tanago Landín",
    "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_186098T7A6769.JPG"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-24-oportunidades-de-negocio-retos-tecnologicos-y-startups-verdes-a-debate-en-el-talentforum-de-este-jueves",
-   "titulo": "Oportunidades de negocio, retos tecnológicos y startups verdes, a debate en el Talent+FORUM de este jueves",
-   "fecha": "2026-11-24",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18608img_18583img_1855320261104-talent-forum-banner.jpg",
-   "pieFoto": "Cartel del evento.",
-   "resumen": "La Universidad Politécnica de Cartagena debate este jueves 26 de noviembre las oportunidades de emprendimiento que ofrecen las tecnologías verdes, a través de un programa de mesas redondas y presentaciones empresariales que reunirá a profesionales, investigadores y representantes de proyectos innovadores.",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18608img_18583img_1855320261104-talent-forum-banner.jpg"
   },
   {
    "enlace": "https://www.upct.es/noticias/2026-11-18-yincana-cientifico-tecnologica-en-el-fablab-para-formar-a-los-investigadores-de-bachillerato-del-simip-2027",
@@ -127,6 +118,15 @@
    "pieFoto": "Estudiantes durante la prueba.",
    "resumen": "Una veintena de estudiantes, integrados en nueve equipos y procedentes de la Politécnica de Cartagena, la Universidad de Murcia, la Católica San Antonio y los centros IES Ingeniero de la Cierva, Colegio Miralmonte y CIFP Carlos III, han disputado esta tarde la final del Ciber Reto Integra 2026, un hackathon de ciberseguridad en el que han tenido que enfrentar un ciberataque en un entorno industrial y encontrar al responsable.",
    "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18601IMG-20261120-WA0009.jpg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-24-oportunidades-de-negocio-retos-tecnologicos-y-startups-verdes-a-debate-en-el-talentforum-de-este-jueves",
+   "titulo": "Oportunidades de negocio, retos tecnológicos y startups verdes, a debate en el Talent+FORUM de este jueves",
+   "fecha": "2026-11-24",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18608img_18583img_1855320261104-talent-forum-banner.jpg",
+   "pieFoto": "Cartel del evento.",
+   "resumen": "La Universidad Politécnica de Cartagena debate este jueves 26 de noviembre las oportunidades de emprendimiento que ofrecen las tecnologías verdes, a través de un programa de mesas redondas y presentaciones empresariales que reunirá a profesionales, investigadores y representantes de proyectos innovadores.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18608img_18583img_1855320261104-talent-forum-banner.jpg"
   },
   {
    "enlace": "https://www.upct.es/noticias/2026-11-20-el-director-del-area-de-levante-de-televes-explica-a-los-estudiantes-de-telematica-lo-vitales-que-son-las-infraestructuras-de-telecomunicaciones-en-edificios",
