@@ -1,7 +1,34 @@
 {
  "fuente": "https://www.upct.es/destacados/noticias.php?ubicacion=general&op=2",
- "actualizado": "2026-11-26T00:29:19+00:00",
+ "actualizado": "2026-11-26T15:24:47+00:00",
  "noticias": [
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-26-la-regata-de-dragones-contra-la-violencia-de-genero-comienza-con-un-minuto-de-silencio-por-veronica-asesinada-en-bullas",
+   "titulo": "La Regata de Dragones contra la Violencia de Género comienza con un minuto de silencio por Verónica, asesinada en Bullas",
+   "fecha": "2026-11-26",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18619WhatsApp%20Image%202026-11-26%20at%2013.06.57.jpeg",
+   "pieFoto": "",
+   "resumen": "La Regata de Dragones contra la Violencia de Género ha comenzado hoy con un minuto de silencio en memoria de Verónica, la mujer de 32 años asesinada ayer en Bullas, coincidiendo con el Día Internacional de la Eliminación de la Violencia contra las Mujeres.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18619WhatsApp%20Image%202026-11-26%20at%2013.06.57.jpeg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-26-catorce-equipos-reman-contra-la-violencia-de-genero-en-la-iii-regata-de-dragones",
+   "titulo": "Catorce equipos reman contra la violencia de género en la III Regata de Dragones",
+   "fecha": "2026-11-26",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18618regata%20dragones.jpeg",
+   "pieFoto": "Una de las carreras que se han disputado hoy.",
+   "resumen": "La Unidad de Igualdad y Diversidad de la UPCT, en colaboración con el Servicio de Deportes, ha organizado hoy la tercera edición de la Regata de Dragones contra la Violencia de Género, celebrada esta mañana en la Cola de Ballena y que se ha iniciado con un minuto de silencio por la mujer asesinada ayer en Bullas.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18618regata%20dragones.jpeg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-26-talentforum-reune-a-un-centenar-de-estudiantes-investigadores-y-emprendedores-en-tecnologias-verdes",
+   "titulo": "Talent+FORUM reúne a un centenar de estudiantes, investigadores y emprendedores en tecnologías verdes",
+   "fecha": "2026-11-26",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_186178T7A6927.JPG",
+   "pieFoto": "La vicerrectora Maté junto a José María Moncasi, Juanma Revuelta y Xavier Verdaguer, tras la presentación del evento.",
+   "resumen": "La tercera edición de este encuentro para promover el emprendimiento ha fomentado el intercambio de ideas y proyectos con mesas temáticas",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_186178T7A6927.JPG"
+  },
   {
    "enlace": "https://www.upct.es/noticias/2026-11-25-la-upct-premia-la-creatividad-que-conciencia-contra-la-violencia-de-genero-a-traves-de-las-palabras-las-imagenes-y-el-audio",
    "titulo": "La UPCT premia la creatividad que conciencia contra la violencia de género a través de las palabras, las imágenes y el audio",
@@ -154,33 +181,6 @@
    "pieFoto": "Fotografía de la web de Mecánicas Bolea del transporte de una máquina industrial.",
    "resumen": "El plazo de solicitud finaliza este miércoles",
    "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_186035937_mecanicas-bolea.jpg"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-20-el-rotary-club-de-cartagena-y-la-upct-promueven-el-voluntariado-intergeneracional-en-residencias",
-   "titulo": "Rotary Club de Cartagena y la UPCT promueven el voluntariado intergeneracional en residencias",
-   "fecha": "2026-11-20",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_185988T7A6469.JPG",
-   "pieFoto": "El Rector y la presidenta del Rotary Club de Cartagena, tras firmar el convenio.",
-   "resumen": "Estudiantes de la Politécnica recibirán créditos por acompañar a mayores y pasear a quienes van en silla de ruedas",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_185988T7A6469.JPG"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-19-presentan-oportunidades-de-empleo-y-practicas-remuneradas-en-estados-unidos",
-   "titulo": "Presentan oportunidades de empleo y prácticas remuneradas en Estados Unidos",
-   "fecha": "2026-11-19",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_185978T7A6627.JPG",
-   "pieFoto": "",
-   "resumen": "El Salón de Grados de la ETSIT ha acogido este jueves una charla informativa sobre oportunidades de empleo y prácticas remuneradas en Estados Unidos para estudiantes universitarios.",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_185978T7A6627.JPG"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-19-alejandro-godinez-premiado-en-la-olimpiada-agustin-dieguez-el-dibujo-tecnico-es-necesario-para-resolver-problemas-de-ingenieria",
-   "titulo": "Alejandro Godínez, premiado en la Olimpiada 'Agustín Diéguez': «El dibujo técnico es necesario para resolver problemas de ingeniería»",
-   "fecha": "2026-11-19",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_185968T7A6619.JPG",
-   "pieFoto": "El alumno, junto al vicedecano del COITIRM y profesores de Expresión Gráfica que le entregaron sus premios.",
-   "resumen": "El área de Expresión Gráfica en la Ingeniería de la UPCT y el Colegio de Ingenieros Técnicos Industriales de la Región de Murcia (COITIRM) entregaron este jueves los premios concedidos al estudiante galardonado en la V Olimpiada de Dibujo Técnico 'Memorial Agustín Diéguez' que se ha matriculado en la Universidad Politécnica de Cartagena.",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_185968T7A6619.JPG"
   }
  ]
 }
