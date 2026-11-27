@@ -1,7 +1,34 @@
 {
  "fuente": "https://www.upct.es/destacados/noticias.php?ubicacion=general&op=2",
- "actualizado": "2026-11-27T15:11:52+00:00",
+ "actualizado": "2026-11-27T23:30:16+00:00",
  "noticias": [
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-27-carmen-garcia-graduada-en-ingenieria-quimica-gana-un-premio-nacional-a-la-excelencia-en-id",
+   "titulo": "Carmen García, graduada en Ingeniería Química, gana un premio nacional a la excelencia en I+D",
+   "fecha": "2026-11-27",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18623Carmen%20Garcia%20H.jpeg",
+   "pieFoto": "",
+   "resumen": "El Trabajo Fin de Grado de Carmen García Martínez-Urrea, graduada en Ingeniería Química por la Universidad Politécnica de Cartagena (UPCT), ha conseguido el Premio Iberquimia 2026 a la Excelencia en I+D por una investigación que propone mejorar la resistencia y durabilidad de equipos utilizados en la industria química mediante la selección de materiales más adecuados.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18623Carmen%20Garcia.jpeg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-27-nuevo-sistema-para-mejorar-la-seguridad-de-la-alimentacion-neonatal-en-el-hospital-santa-lucia",
+   "titulo": "Nuevo sistema para mejorar la seguridad de la alimentación neonatal en el Hospital Santa Lucía",
+   "fecha": "2026-11-27",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18622SAFEMILIK%2001.jpg",
+   "pieFoto": "",
+   "resumen": "SafeMilk, la aplicación diseñada para mejorar la seguridad y la trazabilidad de la alimentación de los recién nacidos hospitalizados, ha sido entregada e instalada este viernes en el Servicio de Neonatología del Hospital General Universitario Santa Lucía de Cartagena.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18622SAFEMILIK%2001.jpg"
+  },
+  {
+   "enlace": "https://www.upct.es/noticias/2026-11-28-graduacion-de-los-nuevos-ingenieros-de-minas-y-presentacion-del-libro-sobre-los-155-anos-de-estos-estudios-en-cartagena",
+   "titulo": "Graduación de los nuevos ingenieros de Minas y presentación del libro sobre los 155 años de estos estudios en Cartagena",
+   "fecha": "2026-11-27",
+   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18621118727.11.2026--%C2%A0Graduacion-Ingenieria-de-minas-y-energia-1.jpg",
+   "pieFoto": "",
+   "resumen": "La Escuela de Caminos y Minas de la UPCT ha celebrado este viernes la graduación de la XV promoción del grado en Ingeniería de Recursos Minerales y Energía y de la V promoción del Máster Universitario en Ingeniería de Minas. El acto, celebrado en el Paraninfo de la Universidad, ha estado presidido por el rector, Mathieu Kessler.",
+   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18621118727.11.2026--%C2%A0Graduacion-Ingenieria-de-minas-y-energia-1.jpg"
+  },
   {
    "enlace": "https://www.upct.es/noticias/2026-11-27-la-estudiante-de-la-upct-con-mejor-expediente-de-primer-curso-logra-una-beca-santander",
    "titulo": "La estudiante de la UPCT con mejor expediente de primer curso logra una beca Santander",
@@ -154,33 +181,6 @@
    "pieFoto": "Estudiantes durante la prueba.",
    "resumen": "Una veintena de estudiantes, integrados en nueve equipos y procedentes de la Politécnica de Cartagena, la Universidad de Murcia, la Católica San Antonio y los centros IES Ingeniero de la Cierva, Colegio Miralmonte y CIFP Carlos III, han disputado esta tarde la final del Ciber Reto Integra 2026, un hackathon de ciberseguridad en el que han tenido que enfrentar un ciberataque en un entorno industrial y encontrar al responsable.",
    "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18601IMG-20261120-WA0009.jpg"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-24-oportunidades-de-negocio-retos-tecnologicos-y-startups-verdes-a-debate-en-el-talentforum-de-este-jueves",
-   "titulo": "Oportunidades de negocio, retos tecnológicos y startups verdes, a debate en el Talent+FORUM de este jueves",
-   "fecha": "2026-11-24",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18608img_18583img_1855320261104-talent-forum-banner.jpg",
-   "pieFoto": "Cartel del evento.",
-   "resumen": "La Universidad Politécnica de Cartagena debate este jueves 26 de noviembre las oportunidades de emprendimiento que ofrecen las tecnologías verdes, a través de un programa de mesas redondas y presentaciones empresariales que reunirá a profesionales, investigadores y representantes de proyectos innovadores.",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18608img_18583img_1855320261104-talent-forum-banner.jpg"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-20-el-director-del-area-de-levante-de-televes-explica-a-los-estudiantes-de-telematica-lo-vitales-que-son-las-infraestructuras-de-telecomunicaciones-en-edificios",
-   "titulo": "El director de Televés en el Levante explica a los estudiantes de Telemática lo vitales que son las infraestructuras de telecomunicaciones en edificios",
-   "fecha": "2026-11-20",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18600IMG-20261120-WA0007.jpg",
-   "pieFoto": "El alumnado durante la charla.",
-   "resumen": "\"El despliegue de estas redes es vital, tanto en edificios de viviendas como en complejos singulares que dan servicio a terceros, ya sean alojamientos turísticos, residencias u hospitales\", así describe el director de negocio del área de Levante de Televés, José Antonio Abadía Palop, las infraestructuras comunes de telecomunicaciones (ICT) que ha explicado esta tarde en una charla para estudiantes del grado en Ingeniería Telemática de la UPCT.",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18600IMG-20261120-WA0007.jpg"
-  },
-  {
-   "enlace": "https://www.upct.es/noticias/2026-11-20-convocadas-tres-becas-de-idi-de-la-catedra-de-amc-global-para-digitalizacion-descarbonizacion-y-automatizacion-industrial",
-   "titulo": "Convocadas tres becas de I+D+i de la cátedra de AMC Global para digitalización, descarbonización y automatización industrial",
-   "fecha": "2026-11-20",
-   "foto": "https://www.upct.es/contenido/destacados/imagenes/img_18599WhatsApp%20Image%202026-11-19%20at%2013.47.43%20%2812%29.jpeg",
-   "pieFoto": "Estudiantes de la UPCT, visitando las instalaciones de AMC Global en Murcia.",
-   "resumen": "La cátedra de AMC Global en la UPCT ha convocado tres nuevas becas de iniciación a la investigación y el desarrollo tecnológico asociadas a actividades de I+D+i en un entorno industrial.",
-   "fotoMediana": "https://www.upct.es/contenido/destacados/imagenes_medianas/img_18599WhatsApp%20Image%202026-11-19%20at%2013.47.43%20%2812%29.jpeg"
   }
  ]
 }
